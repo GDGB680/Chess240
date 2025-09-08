@@ -16,6 +16,7 @@ public class ChessMove {
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -35,4 +36,7 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         throw new RuntimeException("Not implemented");
     }
+
+
+    
 }
