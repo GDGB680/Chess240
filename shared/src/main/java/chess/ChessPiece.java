@@ -53,6 +53,12 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+//        Rule rule = switch (getPieceType()) {
+//            case BISHOP ->
+//        };
+
+
+
         return new HashSet<ChessMove>();
     }
 }

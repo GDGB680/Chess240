@@ -1,0 +1,17 @@
+package chess;
+
+import java.util.Collection;
+import java.util.ArrayList;
+
+public class BishopRule extends BaseMovementRule {
+
+    @Override
+    public Collection<ChessMove> pieceMoves() {
+        Collection<ChessMove> moves = new ArrayList<>();
+        // Implement the specific logic for King's moves here
+        // For example: add all possible one-step moves in all directions
+        // moves.add(...);
+
+        return moves;
+    }
+}
