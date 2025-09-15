@@ -1,9 +1,9 @@
 package chess;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 
-public class BishopRule extends BaseMovementRule {
+public class RookRule extends BaseMovementRule {
 
     @Override
     public Collection<ChessMove> pieceMoves() {

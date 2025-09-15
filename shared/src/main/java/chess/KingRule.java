@@ -3,7 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
-public class BishopRule extends BaseMovementRule {
+public class KingRule extends BaseMovementRule {
 
     @Override
     public Collection<ChessMove> pieceMoves() {
