@@ -35,7 +35,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return pieceColor;
+            return pieceColor;
     }
 
     /**
@@ -53,12 +53,6 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-//        Rule rule = switch (getPieceType()) {
-//            case BISHOP ->
-//        };
-
-
-
         return new HashSet<ChessMove>();
     }
 }
