@@ -3,12 +3,6 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-/**
- * Represents a single chess piece
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
@@ -19,9 +13,6 @@ public class ChessPiece {
         this.type = type;
     }
 
-    /**
-     * The various different chess piece options
-     */
     public enum PieceType {
         KING,
         QUEEN,
@@ -31,19 +22,8 @@ public class ChessPiece {
         PAWN
     }
 
-    /**
-     * @return Which team this chess piece belongs to
-     */
-    public ChessGame.TeamColor getTeamColor() {
-            return pieceColor;
-    }
-
-    /**
-     * @return which type of chess piece this piece is
-     */
-    public PieceType getPieceType() {
-        return type;
-    }
+    public ChessGame.TeamColor getTeamColor() {return pieceColor;}
+    public PieceType getPieceType() {return type;}
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -56,3 +36,16 @@ public class ChessPiece {
         return new HashSet<ChessMove>();
     }
 }
+
+
+//@Override
+//public boolean equals(Object o) {
+//    if (this == o) {return true;}
+//    if (o == null || getClass() != o.getClass()) {return false;}
+//    ChessPiece that = (ChessPiece) o;
+//    return pieceColor == that.pieceColor && pieceType == that.pieceType;
+//}
+//
+//@Override
+//public int hashCode() { return Objects.hash(pieceColor, pieceType); }
+//}
