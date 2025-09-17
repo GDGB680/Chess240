@@ -10,13 +10,13 @@ public class BishopRule extends BaseMovementRule {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessPiece bishop = board.getPiece(position);
 
-        if (bishop == null) {
-            return moves;
-        }
-        this.teamColor = bishop.getTeamColor();
-
-
-        moves.addAll(calculateDiagonalMoves(board, position));
+//        if (bishop == null) {
+//            return moves;
+//        }
+//        this.teamColor = bishop.getTeamColor();
+//
+//
+//        moves.addAll(calculateDiagonalMoves(board, position));
         return moves;
     }
 }

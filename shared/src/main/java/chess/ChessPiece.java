@@ -2,15 +2,16 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private final PieceType type;
+    private final PieceType pieceType;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
-        this.type = type;
+        this.pieceType = type;
     }
 
     public enum PieceType {
@@ -22,8 +23,13 @@ public class ChessPiece {
         PAWN
     }
 
-    public ChessGame.TeamColor getTeamColor() {return pieceColor;}
-    public PieceType getPieceType() {return type;}
+    public ChessGame.TeamColor getTeamColor() {
+        return pieceColor;
+    }
+
+    public PieceType getPieceType() {
+        return pieceType;
+    }
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -35,17 +41,21 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return new HashSet<ChessMove>();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && pieceType == that.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
 }
-
-
-//@Override
-//public boolean equals(Object o) {
-//    if (this == o) {return true;}
-//    if (o == null || getClass() != o.getClass()) {return false;}
-//    ChessPiece that = (ChessPiece) o;
-//    return pieceColor == that.pieceColor && pieceType == that.pieceType;
-//}
-//
-//@Override
-//public int hashCode() { return Objects.hash(pieceColor, pieceType); }
-//}
