@@ -9,23 +9,22 @@ public class KnightRule extends BaseMovementRule {
     public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
         Collection<ChessMove> moves = new ArrayList<>();
 
-        int[][] jumps = {
+        int[][] directions = {
                 {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
                 {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
         };
 
-        for (int[] jump : jumps) {
-            int row = position.getRow() + jump[0];
-            int col = position.getColumn() + jump[1];
+        for (int[] direction : directions) {
+            int row = position.getRow() + direction[0];
+            int col = position.getColumn() + direction[1];
 
-            if (board.isValidSquare(row, col)) break;
+            if (!board.isValidSquare(row, col)) continue;
 
             if (!board.isOccupiedByOwnPiece(row, col, position)) {
                 ChessPosition newPosition = new ChessPosition(row, col);
                 moves.add(new ChessMove(position, newPosition, null));
             }
         }
-
         return moves;
     }
 }
