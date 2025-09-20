@@ -8,9 +8,11 @@ public class RookRule extends BaseMovementRule {
     @Override
     public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
         Collection<ChessMove> moves = new ArrayList<>();
-        // Implement the specific logic for moves here
-        // For example: add all possible one-step moves in all directions
-        // moves.add(...);
+        int[][] directions = {{1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+        for (int[] direction : directions) {
+            addMovesInDirection(moves, board, position, direction[0], direction[1]);
+        }
 
         return moves;
     }

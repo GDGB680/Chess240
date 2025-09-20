@@ -30,13 +30,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 board[i][j] = null;
             }
         }
-        // Set up white
+        // Set up the white
         addPiece(new ChessPosition(1, 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(1, 2), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(1, 3), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
@@ -50,7 +49,7 @@ public class ChessBoard {
             addPiece(new ChessPosition(2, i),
                     new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
         }
-        // Set up black
+        // Set up the black
         addPiece(new ChessPosition(8, 1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(8, 2), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(8, 3), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
@@ -65,6 +64,39 @@ public class ChessBoard {
                     new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
     }
+
+
+
+    public boolean isValidSquare(int row, int col) {
+        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
+    }
+
+    public boolean isOccupiedByOwnPiece(int row, int col, ChessPosition fromPosition) {
+        if (!isValidSquare(row, col)) return false;
+
+        ChessPiece fromPiece = getPiece(fromPosition);
+        ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
+
+        if (fromPiece == null || targetPiece == null) {
+            return false;
+        }
+
+        return fromPiece.getTeamColor() == targetPiece.getTeamColor();
+    }
+
+    public boolean isOccupiedByOpponent(int row, int col, ChessPosition fromPosition) {
+        if (!isValidSquare(row, col)) return false;
+
+        ChessPiece fromPiece = getPiece(fromPosition);
+        ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
+
+        if (fromPiece == null || targetPiece == null) {
+            return false;
+        }
+
+        return fromPiece.getTeamColor() != targetPiece.getTeamColor();
+    }
+
 
 
     @Override

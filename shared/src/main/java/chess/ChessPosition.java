@@ -18,6 +18,5 @@ public class ChessPosition {
     }
 
     public int getRow() {return row;}
-
     public int getColumn() {return col;}
 }

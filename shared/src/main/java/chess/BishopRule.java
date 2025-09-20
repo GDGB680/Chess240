@@ -8,15 +8,12 @@ public class BishopRule extends BaseMovementRule {
     @Override
     public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
         Collection<ChessMove> moves = new ArrayList<>();
-        ChessPiece bishop = board.getPiece(position);
+        int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
-//        if (bishop == null) {
-//            return moves;
-//        }
-//        this.teamColor = bishop.getTeamColor();
-//
-//
-//        moves.addAll(calculateDiagonalMoves(board, position));
+        for (int[] direction : directions) {
+            addMovesInDirection(moves, board, position, direction[0], direction[1]);
+        }
+
         return moves;
     }
 }

@@ -22,5 +22,5 @@ public class ChessMove {
     public ChessPosition getStartPosition() {return startPosition;}
     public ChessPosition getEndPosition() {return endPosition;}
     public ChessPiece.PieceType getPromotionPiece() {return promotionPiece;}
-    
+
 }
