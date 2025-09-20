@@ -38,7 +38,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new HashSet<ChessMove>();
+        Rules rules = new Rules();
+        MovementRule rule = rules.getRule(this.pieceType.toString());
+        return rule.pieceMoves(myPosition, board);
     }
 
     @Override

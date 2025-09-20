@@ -8,9 +8,20 @@ public class KingRule extends BaseMovementRule {
     @Override
     public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
         Collection<ChessMove> moves = new ArrayList<>();
-        // Implement the specific logic for moves here
-        // For example: add all possible one-step moves in all directions
-        // moves.add(...);
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},
+                              {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+        for (int[] direction : directions) {
+            int row = position.getRow() + direction[0];
+            int col = position.getColumn() + direction[1];
+
+            if (!board.isValidSquare(row, col)) continue;
+
+            if (!board.isOccupiedByOwnPiece(row, col, position)) {
+                ChessPosition newPosition = new ChessPosition(row, col);
+                moves.add(new ChessMove(position, newPosition, null));
+            }
+        }
 
         return moves;
     }

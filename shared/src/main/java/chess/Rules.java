@@ -4,7 +4,7 @@ public class Rules {
 
 
     public MovementRule getRule(String pieceType) {
-        switch (pieceType.toLowerCase()) {
+        switch (pieceType) {
             case "BISHOP":
                 return new BishopRule();
             case "KING":
