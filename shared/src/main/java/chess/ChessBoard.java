@@ -73,12 +73,12 @@ public class ChessBoard {
         return fromPiece.getTeamColor() != targetPiece.getTeamColor();
     }
 
-    public boolean isOccupied(int row, int col, ChessPosition fromPosition) {
-        if (!isValidSquare(row, col)) return false;
-        if (!isOccupiedByOwnPiece(row, col, fromPosition)) return false;
-        if (!isOccupiedByOpponent(row, col, fromPosition)) return false;
-        return true;
-    }
+//    public boolean isOccupied(int row, int col, ChessPosition fromPosition) {
+//        if (!isValidSquare(row, col)) return false;
+//        if (!isOccupiedByOwnPiece(row, col, fromPosition)) return false;
+//        if (!isOccupiedByOpponent(row, col, fromPosition)) return false;
+//        return true;
+//    }
 
     @Override
     public boolean equals(Object o) {

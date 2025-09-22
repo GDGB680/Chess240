@@ -2,7 +2,6 @@ package chess;
 
 public class Rules {
 
-
     public MovementRule getRule(String pieceType) {
         switch (pieceType) {
             case "BISHOP":
