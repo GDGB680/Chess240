@@ -2,12 +2,6 @@ package chess;
 
 import java.util.Objects;
 
-/**
- * Represents moving a chess piece on a chessboard
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
 public class ChessMove {
 
     private final ChessPosition startPosition;
@@ -30,7 +24,6 @@ public class ChessMove {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-
         ChessMove chessMove = (ChessMove) obj;
         return Objects.equals(startPosition, chessMove.startPosition) &&
                 Objects.equals(endPosition, chessMove.endPosition) &&

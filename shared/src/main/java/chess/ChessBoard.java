@@ -2,12 +2,6 @@ package chess;
 
 import java.util.Arrays;
 
-/**
- * A chessboard that can hold and rearrange chess pieces.
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
 public class ChessBoard {
 
     private final ChessPiece[][] board = new ChessPiece[8][8];
@@ -23,7 +17,6 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
-
 
     /**
      * Sets the board to the default starting board
@@ -66,34 +59,23 @@ public class ChessBoard {
     }
 
 
-
     public boolean isValidSquare(int row, int col) {
         return row >= 1 && row <= 8 && col >= 1 && col <= 8;
     }
 
     public boolean isOccupiedByOwnPiece(int row, int col, ChessPosition fromPosition) {
         if (!isValidSquare(row, col)) return false;
-
         ChessPiece fromPiece = getPiece(fromPosition);
         ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
-
-        if (fromPiece == null || targetPiece == null) {
-            return false;
-        }
-
+        if (fromPiece == null || targetPiece == null) {return false;}
         return fromPiece.getTeamColor() == targetPiece.getTeamColor();
     }
 
     public boolean isOccupiedByOpponent(int row, int col, ChessPosition fromPosition) {
         if (!isValidSquare(row, col)) return false;
-
         ChessPiece fromPiece = getPiece(fromPosition);
         ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
-
-        if (fromPiece == null || targetPiece == null) {
-            return false;
-        }
-
+        if (fromPiece == null || targetPiece == null) {return false;}
         return fromPiece.getTeamColor() != targetPiece.getTeamColor();
     }
 
