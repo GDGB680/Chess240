@@ -12,7 +12,7 @@ public class PawnRule extends BaseMovementRule {
         ChessPiece pawn = board.getPiece(position);
         ChessGame.TeamColor color = pawn.getTeamColor();
 
-        int dir = (color == ChessGame.TeamColor.WHITE) ? 1 : -1;
+        int direction = (color == ChessGame.TeamColor.WHITE) ? 1 : -1;
         int startRow = (color == ChessGame.TeamColor.WHITE) ? 2 : 7;
         int promotionRow = (color == ChessGame.TeamColor.WHITE) ? 8 : 1;
 
@@ -20,17 +20,17 @@ public class PawnRule extends BaseMovementRule {
         int col = position.getColumn();
 
         // Helper to add either normal or promotion moves
-        BiConsumer<ChessPosition, ChessPiece.PieceType> addMove = (dest, promo) -> {
+        BiConsumer<ChessPosition, ChessPiece.PieceType> addMove =
+                (dest, promo) -> {
             moves.add(new ChessMove(position, dest, promo));
         };
 
         // 1) One‐square forward
-        int forwardRow = row + dir;
+        int forwardRow = row + direction;
         ChessPosition forwardPos = new ChessPosition(forwardRow, col);
         boolean blockedForward = !board.isValidSquare(forwardRow, col)
                 || board.isOccupiedByOwnPiece(forwardRow, col, position)
                 || board.isOccupiedByOpponent(forwardRow, col, position);
-
         if (!blockedForward) {
             // Promotion on reaching back rank
             if (forwardRow == promotionRow) {
@@ -43,10 +43,9 @@ public class PawnRule extends BaseMovementRule {
                 }
             } else {
                 addMove.accept(forwardPos, null);
-
                 // 2) Two‐square forward on first move (both squares must be empty)
                 if (row == startRow) {
-                    int twoAhead = row + 2 * dir;
+                    int twoAhead = row + 2 * direction;
                     ChessPosition twoPos = new ChessPosition(twoAhead, col);
                     boolean blockedTwoAhead = !board.isValidSquare(twoAhead, col)
                             || board.isOccupiedByOwnPiece(twoAhead, col, position)
@@ -54,9 +53,7 @@ public class PawnRule extends BaseMovementRule {
                             || board.isOccupiedByOwnPiece(forwardRow, col, position)
                             || board.isOccupiedByOpponent(forwardRow, col, position);
 
-                    if (!blockedTwoAhead) {
-                        addMove.accept(twoPos, null);
-                    }
+                    if (!blockedTwoAhead) {addMove.accept(twoPos, null);}
                 }
             }
         }
@@ -77,12 +74,9 @@ public class PawnRule extends BaseMovementRule {
                             ChessPiece.PieceType.KNIGHT }) {
                         addMove.accept(capturePos, promoType);
                     }
-                } else {
-                    addMove.accept(capturePos, null);
-                }
+                } else {addMove.accept(capturePos, null);}
             }
         }
-
         return moves;
     }
 }
