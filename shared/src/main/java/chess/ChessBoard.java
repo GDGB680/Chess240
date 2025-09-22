@@ -9,7 +9,6 @@ public class ChessBoard {
     public ChessBoard() {
     }
 
-
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
@@ -18,10 +17,6 @@ public class ChessBoard {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
-    /**
-     * Sets the board to the default starting board
-     * (How the game of chess normally starts)
-     */
     public void resetBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -57,7 +52,6 @@ public class ChessBoard {
                     new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
     }
-
 
     public boolean isValidSquare(int row, int col) {
         return row >= 1 && row <= 8 && col >= 1 && col <= 8;
