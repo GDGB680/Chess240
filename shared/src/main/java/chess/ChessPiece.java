@@ -1,11 +1,9 @@
 package chess;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 public class ChessPiece {
-
     private final ChessGame.TeamColor pieceColor;
     private final PieceType pieceType;
 
@@ -22,7 +20,6 @@ public class ChessPiece {
         ROOK,
         PAWN
     }
-
     public ChessGame.TeamColor getTeamColor() {
         return pieceColor;
     }
