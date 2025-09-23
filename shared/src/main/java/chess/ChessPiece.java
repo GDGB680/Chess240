@@ -45,7 +45,5 @@ public class ChessPiece {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(pieceColor, pieceType);
-    }
+    public int hashCode() {return Objects.hash(pieceColor, pieceType);}
 }

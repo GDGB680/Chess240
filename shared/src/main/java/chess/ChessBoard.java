@@ -81,5 +81,5 @@ public class ChessBoard {
     }
 
     @Override
-    public int hashCode() { return Arrays.deepHashCode(board); }
+    public int hashCode() {return Arrays.deepHashCode(board);}
 }

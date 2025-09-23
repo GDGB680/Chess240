@@ -19,13 +19,10 @@ public class ChessPosition {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-
         ChessPosition position = (ChessPosition) obj;
         return row == position.row && col == position.col;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(row, col);
-    }
+    public int hashCode() {return Objects.hash(row, col);}
 }
