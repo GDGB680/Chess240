@@ -14,7 +14,6 @@ public class QueenRule extends BaseMovementRule {
         for (int[] direction : directions) {
             addMovesInDirection(moves, board, position, direction[0], direction[1]);
         }
-
         return moves;
     }
 }
