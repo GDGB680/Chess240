@@ -22,7 +22,6 @@ public class KingRule extends BaseMovementRule {
                 moves.add(new ChessMove(position, newPosition, null));
             }
         }
-
         return moves;
     }
 }
