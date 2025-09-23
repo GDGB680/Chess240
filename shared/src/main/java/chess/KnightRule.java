@@ -8,11 +8,8 @@ public class KnightRule extends BaseMovementRule {
     @Override
     public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
         Collection<ChessMove> moves = new ArrayList<>();
-
-        int[][] directions = {
-                {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
-                {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
-        };
+        int[][] directions = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+                              {1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
 
         for (int[] direction : directions) {
             int row = position.getRow() + direction[0];

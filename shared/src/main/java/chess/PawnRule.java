@@ -20,12 +20,11 @@ public class PawnRule extends BaseMovementRule {
         int col = position.getColumn();
 
         // Helper to add either normal or promotion moves
-        BiConsumer<ChessPosition, ChessPiece.PieceType> addMove =
-                (dest, promo) -> {
+        BiConsumer<ChessPosition, ChessPiece.PieceType> addMove = (dest, promo) -> {
             moves.add(new ChessMove(position, dest, promo));
         };
 
-        // 1) One‐square forward
+// 1) One‐square forward
         int forwardRow = row + direction;
         ChessPosition forwardPos = new ChessPosition(forwardRow, col);
         boolean blockedForward = !board.isValidSquare(forwardRow, col)
@@ -43,7 +42,7 @@ public class PawnRule extends BaseMovementRule {
                 }
             } else {
                 addMove.accept(forwardPos, null);
-                // 2) Two‐square forward on first move (both squares must be empty)
+// 2) Two‐square forward on first move (both squares must be empty)
                 if (row == startRow) {
                     int twoAhead = row + 2 * direction;
                     ChessPosition twoPos = new ChessPosition(twoAhead, col);
@@ -57,8 +56,7 @@ public class PawnRule extends BaseMovementRule {
                 }
             }
         }
-
-        // 3) Diagonal captures (with promotion if on last rank)
+// 3) Diagonal captures (with promotion if on last rank)
         for (int dc : new int[]{-1, 1}) {
             int captureCol = col + dc;
             int captureRow = forwardRow;
