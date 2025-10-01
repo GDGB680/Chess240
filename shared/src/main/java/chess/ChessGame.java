@@ -10,16 +10,16 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    private TeamColor startColor;
+    private TeamColor currentColor;
 
     public ChessGame() {
-        this.startColor = TeamColor.WHITE;
+        this.currentColor = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
-    public TeamColor getTeamTurn() {return startColor;}
+    public TeamColor getTeamTurn() {return currentColor;}
 
     /**
      * Set's which teams turn it is
