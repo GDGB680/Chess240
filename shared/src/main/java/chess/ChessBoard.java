@@ -55,7 +55,7 @@ public class ChessBoard {
     }
 
     public boolean isOccupiedByOwnPiece(int row, int col, ChessPosition fromPosition) {
-        if (!isValidSquare(row, col)) return false;
+        if (!isValidSquare(row, col)) {return false;}
         ChessPiece fromPiece = getPiece(fromPosition);
         ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
         if (fromPiece == null || targetPiece == null) {return false;}
@@ -63,7 +63,7 @@ public class ChessBoard {
     }
 
     public boolean isOccupiedByOpponent(int row, int col, ChessPosition fromPosition) {
-        if (!isValidSquare(row, col)) return false;
+        if (!isValidSquare(row, col)) {return false;}
         ChessPiece fromPiece = getPiece(fromPosition);
         ChessPiece targetPiece = getPiece(new ChessPosition(row, col));
         if (fromPiece == null || targetPiece == null) {return false;}

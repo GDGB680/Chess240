@@ -88,13 +88,13 @@ public class ChessGame {
 
     public boolean isInCheckmate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) { return false; }
-        return !LegalMoves(teamColor);
+        return !legalMoves(teamColor);
     }
 
 
     public boolean isInStalemate(TeamColor teamColor) {
         if (isInCheck(teamColor)) { return false; }
-        return !LegalMoves(teamColor);
+        return !legalMoves(teamColor);
     }
 
     public void setBoard(ChessBoard board) {this.board = board;}
@@ -142,7 +142,7 @@ public class ChessGame {
         } return false;
     }
 
-    private boolean LegalMoves(TeamColor teamColor) {
+    private boolean legalMoves(TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);

@@ -15,7 +15,7 @@ public class KingRule extends BaseMovementRule {
             int row = position.getRow() + direction[0];
             int col = position.getColumn() + direction[1];
 
-            if (!board.isValidSquare(row, col)) continue;
+            if (!board.isValidSquare(row, col)) {continue;}
 
             if (!board.isOccupiedByOwnPiece(row, col, position)) {
                 ChessPosition newPosition = new ChessPosition(row, col);

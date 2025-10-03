@@ -21,8 +21,5 @@ public abstract class BaseMovementRule implements MovementRule {
         }
     }
 
-//    @Override
-//    public Collection<ChessMove> pieceMoves(ChessPosition position, ChessBoard board) {
-//        return new ArrayList<>();
-//    }
+
 }
