@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -35,7 +36,37 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return new ArrayList<>();
+        }
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        for (ChessMove move : possibleMoves) {
+            if (isValidMove(move)) {
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
+    }
+
+
+    private boolean isValidMove(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece == null) { return false; }
+        // Check if the move is in the list of possible moves for the piece
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, move.getStartPosition());
+        if (!possibleMoves.contains(move)) { return false; }
+        // Temporarily make the move
+        ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+        board.addPiece(move.getEndPosition(), piece);
+        board.addPiece(move.getStartPosition(), null);
+        // Check if the move leaves the piece's team in check
+        boolean valid = !isInCheck(piece.getTeamColor());
+        // Undo the move
+        board.addPiece(move.getStartPosition(), piece);
+        board.addPiece(move.getEndPosition(), capturedPiece);
+        return valid;
     }
 
     /**
