@@ -16,23 +16,9 @@ public class ChessGame {
         this.currentColor = TeamColor.WHITE;
     }
 
-    /**
-     * @return Which team's turn it is
-     */
     public TeamColor getTeamTurn() {return currentColor;}
+    public void setTeamTurn(TeamColor team) {this.currentColor = team;}
 
-    /**
-     * Set's which teams turn it is
-     *
-     * @param team the team whose turn it is
-     */
-    public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    /**
-     * Enum identifying the 2 possible teams in a chess game
-     */
     public enum TeamColor {
         WHITE,
         BLACK
