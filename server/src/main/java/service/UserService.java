@@ -1,5 +1,9 @@
 package service;
 
+
+//import model;
+
+//import datamodel.LoginResult;
 import datamodel.RegisterResult;
 import datamodel.UserData;
 
