@@ -1,17 +1,20 @@
 package service;
 
+import model.UserData;
 
-//import model;
-
-//import datamodel.LoginResult;
+import datamodel.LoginResult;
 import datamodel.RegisterResult;
-import datamodel.UserData;
 
 public class UserService {
     public RegisterResult register(UserData user) {
         return new RegisterResult(user.username(), "authtokenstringplaceholder");
     }
 
-//    public LoginResult login(LoginRequest loginRequest) {}
+    public LoginResult login(UserData user) {
+        return new LoginResult(user.username(), "sgldruewfoahla;f");
+    }
+
+
+
 //    public void logout(LogoutRequest logoutRequest) {}
 }
