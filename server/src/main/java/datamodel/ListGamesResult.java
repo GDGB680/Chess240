@@ -1,6 +1,7 @@
 package datamodel;
 
+import model.GameData;
 import java.util.Collection;
 
-//public record ListGamesResult(Collection games<String gameID, String whiteUsername, String blackUsername, String gameName>) {
-//}
+public record ListGamesResult(Collection<GameData> games) {
+}

@@ -13,21 +13,21 @@ public class MemoryDataAccess implements DataAccess {
     final private HashMap<String, AuthData> authTokens = new HashMap<>();
     final private HashMap<Integer, GameData> games = new HashMap<>();
 
-    public UserData createUser(UserData user) {
+    public void createUser(UserData user) {
         user = new UserData(user.username(), user.password(), user.email());
         users.put(user.username(), user);
-        return user;
     }
 
-    public AuthData createAuthToken(AuthData authToken) {
+    public void createAuthToken(AuthData authToken) {
         authToken = new AuthData(authToken.authToken(), authToken.username());
         authTokens.put(authToken.authToken(), authToken);
-        return authToken;
     }
 
-    public GameData createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
-        GameData newGameData = new GameData(generateGameID(), whiteUsername, blackUsername, gameName, game);
-        games.put(newGameData.gameID(), newGameData);
+    public GameData createGame(String gameName) {
+        int newGameID = generateGameID();
+        ChessGame newGame = new ChessGame();
+        GameData newGameData = new GameData(newGameID, null,null, gameName,newGame);
+        games.put(newGameID, newGameData);
         return newGameData;
     }
 
@@ -67,6 +67,10 @@ public class MemoryDataAccess implements DataAccess {
 
     private int generateGameID() {
         Random random = new Random();
-        return random.nextInt(1000);
+        int id;
+        do {
+            id = random.nextInt(10000); // Generate unique ID
+        } while (games.containsKey(id)); // Check for collision
+        return id;
     }
 }
