@@ -1,12 +1,23 @@
 package service;
 
+import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
 import model.UserData;
 
 import datamodel.LoginResult;
 import datamodel.RegisterResult;
 
+
+
 public class UserService {
-    public RegisterResult register(UserData user) {
+
+    private final DataAccess dataAccess;
+
+    public UserService(DataAccess dataAccess) {
+        this.dataAccess = dataAccess;
+    }
+
+    public RegisterResult register(UserData user) throws DataAccessException {
         return new RegisterResult(user.username(), "authtokenstringplaceholder");
     }
 
@@ -15,6 +26,7 @@ public class UserService {
     }
 
 
+    public void logout(UserData user) {}
 
-//    public void logout(LogoutRequest logoutRequest) {}
+
 }
