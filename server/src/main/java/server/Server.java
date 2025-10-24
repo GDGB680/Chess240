@@ -1,36 +1,34 @@
 package server;
 
-import dataaccess.*;
+import dataaccess.MemoryDataAccess;
+import dataaccess.DataAccess;
 import handler.Handler;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Server {
     private final Javalin javalin;
     private final Handler handler;
 
     public Server() {
-        // Initialize data access and services
         DataAccess dataAccess = new MemoryDataAccess();
         handler = new Handler(dataAccess);
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
         javalin = Javalin.create(config -> {
-            config.staticFiles.add("web");
+            config.jsonMapper(new JavalinJackson(objectMapper));
         });
 
-        // Register endpoints
         configureRoutes();
     }
 
     private void configureRoutes() {
-        // Clear endpoint
         javalin.delete("/db", handler::clear);
-
-        // User endpoints
         javalin.post("/user", handler::register);
         javalin.post("/session", handler::login);
         javalin.delete("/session", handler::logout);
-
-        // Game endpoints
         javalin.get("/game", handler::listGames);
         javalin.post("/game", handler::createGame);
         javalin.put("/game", handler::joinGame);
@@ -45,3 +43,4 @@ public class Server {
         javalin.stop();
     }
 }
+
