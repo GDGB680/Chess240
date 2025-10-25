@@ -1,11 +1,11 @@
 package server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dataaccess.MemoryDataAccess;
 import dataaccess.DataAccess;
 import handler.Handler;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Server {
     private final Javalin javalin;
@@ -43,4 +43,3 @@ public class Server {
         javalin.stop();
     }
 }
-
