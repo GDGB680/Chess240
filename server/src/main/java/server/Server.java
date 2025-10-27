@@ -18,11 +18,23 @@ public class Server {
         ObjectMapper objectMapper = new ObjectMapper();
 
         javalin = Javalin.create(config -> {
-            config.jsonMapper(new JavalinJackson(objectMapper));
+            config.jsonMapper(new JavalinJackson());
         });
 
         configureRoutes();
     }
+
+//    public Server() {
+//        // Initialize DataAccess and Handler
+//        DataAccess dataAccess = new MemoryDataAccess();
+//        handler = new Handler(dataAccess);
+//
+//        // Create Javalin WITHOUT static files
+//        javalin = Javalin.create();
+//
+//        // Register routes
+//        configureRoutes();
+//    }
 
     private void configureRoutes() {
         javalin.delete("/db", handler::clear);
