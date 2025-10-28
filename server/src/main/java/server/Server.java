@@ -1,11 +1,9 @@
 package server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dataaccess.MemoryDataAccess;
 import dataaccess.DataAccess;
 import handler.Handler;
 import io.javalin.Javalin;
-import io.javalin.json.JavalinJackson;
 
 public class Server {
     private final Javalin javalin;
@@ -15,26 +13,15 @@ public class Server {
         DataAccess dataAccess = new MemoryDataAccess();
         handler = new Handler(dataAccess);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
         javalin = Javalin.create(config -> {
-            config.jsonMapper(new JavalinJackson());
+            config.staticFiles.add(staticFileConfig -> {
+                staticFileConfig.hostedPath = "/";
+                staticFileConfig.directory = "/public";
+            });
         });
 
         configureRoutes();
     }
-
-//    public Server() {
-//        // Initialize DataAccess and Handler
-//        DataAccess dataAccess = new MemoryDataAccess();
-//        handler = new Handler(dataAccess);
-//
-//        // Create Javalin WITHOUT static files
-//        javalin = Javalin.create();
-//
-//        // Register routes
-//        configureRoutes();
-//    }
 
     private void configureRoutes() {
         javalin.delete("/db", handler::clear);

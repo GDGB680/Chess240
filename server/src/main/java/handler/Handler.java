@@ -94,11 +94,9 @@ public class Handler {
         }
     }
 
-    // List games endpoint - GET /game
     public void listGames(Context ctx) {
         try {
             String authToken = ctx.header("authorization");
-
             if (authToken == null || authToken.isEmpty()) {
                 throw new DataAccessException("unauthorized");
             }
@@ -106,12 +104,14 @@ public class Handler {
             ListGamesResult result = gameService.listGames(authToken);
             ctx.status(200);
             ctx.json(result);
+
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
             handleException(ctx, e);
         }
     }
+
 
     // Create game endpoint - POST /game
     public void createGame(Context ctx) {
@@ -138,32 +138,35 @@ public class Handler {
         }
     }
 
-    // Join game endpoint - PUT /game
     public void joinGame(Context ctx) {
         try {
             String authToken = ctx.header("authorization");
-
             if (authToken == null || authToken.isEmpty()) {
                 throw new DataAccessException("unauthorized");
             }
 
             JoinGameRequest request = gson.fromJson(ctx.body(), JoinGameRequest.class);
-
-            if (request == null || request.gameID() == null) {
+            if (request == null) {
                 throw new DataAccessException("bad request");
             }
 
-            // Validate playerColor (null is valid for observer, but empty string or invalid values are not)
-            String playerColor = request.playerColor();
-            if (playerColor != null && !playerColor.isEmpty()) {
-                if (!playerColor.equalsIgnoreCase("WHITE") && !playerColor.equalsIgnoreCase("BLACK")) {
-                    throw new DataAccessException("bad request");
-                }
+            Integer gameID = request.gameID();
+            if (gameID == null || gameID <= 0) {
+                throw new DataAccessException("bad request");
             }
 
-            gameService.joinGame(request.gameID(), playerColor, authToken);
+            String playerColor = request.playerColor();
+
+            // playerColor must be WHITE or BLACK - NO null, NO empty string, NO other values
+            if (playerColor == null || playerColor.isEmpty() ||
+                    (!playerColor.equals("WHITE") && !playerColor.equals("BLACK"))) {
+                throw new DataAccessException("bad request");
+            }
+
+            gameService.joinGame(gameID, playerColor, authToken);
             ctx.status(200);
             ctx.json(Map.of());
+
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
@@ -171,7 +174,8 @@ public class Handler {
         }
     }
 
-    // Exception handlers
+
+
     private void handleDataAccessException(Context ctx, DataAccessException e) {
         int statusCode = determineStatusCode(e.getMessage());
         ctx.status(statusCode);
