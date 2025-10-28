@@ -26,8 +26,9 @@ public class Handler {
     public void clear(Context ctx) {
         try {
             dataAccess.clear();
+            String gsonResult = gson.toJson(Map.of());
             ctx.status(200);
-            ctx.json(Map.of());
+            ctx.json(gsonResult);
         } catch (Exception e) {
             handleException(ctx, e);
         }
@@ -45,8 +46,9 @@ public class Handler {
             }
 
             RegisterResult result = userService.register(request);
+            String gsonresult = gson.toJson(result);
             ctx.status(200);
-            ctx.json(result);
+            ctx.json(gsonresult);
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
@@ -65,8 +67,9 @@ public class Handler {
             }
 
             LoginResult result = userService.login(request);
+            String gsonresult = gson.toJson(result);
             ctx.status(200);
-            ctx.json(result);
+            ctx.json(gsonresult);
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
@@ -85,8 +88,9 @@ public class Handler {
 
             AuthData authData = new AuthData(authToken, null);
             userService.logout(authData);
+            String gsonResult = gson.toJson(Map.of());
             ctx.status(200);
-            ctx.json(Map.of());
+            ctx.json(gsonResult);
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
@@ -102,8 +106,9 @@ public class Handler {
             }
 
             ListGamesResult result = gameService.listGames(authToken);
+            String gsonresult = gson.toJson(result);
             ctx.status(200);
-            ctx.json(result);
+            ctx.json(gsonresult);
 
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
@@ -129,8 +134,9 @@ public class Handler {
             }
 
             CreateGameResult result = gameService.createGame(request.gameName(), authToken);
+            String gsonresult = gson.toJson(result);
             ctx.status(200);
-            ctx.json(result);
+            ctx.json(gsonresult);
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
         } catch (Exception e) {
@@ -164,8 +170,9 @@ public class Handler {
             }
 
             gameService.joinGame(gameID, playerColor, authToken);
+            String gsonResult = gson.toJson(Map.of());
             ctx.status(200);
-            ctx.json(Map.of());
+            ctx.json(gsonResult);
 
         } catch (DataAccessException e) {
             handleDataAccessException(ctx, e);
@@ -179,12 +186,14 @@ public class Handler {
     private void handleDataAccessException(Context ctx, DataAccessException e) {
         int statusCode = determineStatusCode(e.getMessage());
         ctx.status(statusCode);
-        ctx.json(Map.of("message", "Error: " + e.getMessage()));
+        String gsonResult = gson.toJson(Map.of("message", "Error " + e.getMessage()));
+        ctx.json(gsonResult);
     }
 
     private void handleException(Context ctx, Exception e) {
         ctx.status(500);
-        ctx.json(Map.of("message", "Error: " + e.getMessage()));
+        String gsonResult = gson.toJson(Map.of("message", "Error " + e.getMessage()));
+        ctx.json(gsonResult);
     }
 
     private int determineStatusCode(String errorMessage) {

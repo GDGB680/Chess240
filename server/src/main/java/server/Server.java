@@ -20,6 +20,8 @@ public class Server {
             });
         });
 
+//        javalin.jsonMapper(com.google.gson.Gson::new);
+
         configureRoutes();
     }
 
