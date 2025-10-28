@@ -16,7 +16,7 @@ public class Server {
         javalin = Javalin.create(config -> {
             config.staticFiles.add(staticFileConfig -> {
                 staticFileConfig.hostedPath = "/";
-                staticFileConfig.directory = "/public";
+                staticFileConfig.directory = "/web";
             });
         });
 
