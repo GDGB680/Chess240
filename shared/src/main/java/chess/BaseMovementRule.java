@@ -21,5 +21,15 @@ public abstract class BaseMovementRule implements MovementRule {
         }
     }
 
+    protected void addSingleMove(Collection<ChessMove> moves, ChessBoard board,
+                                 ChessPosition start, int rowOffset, int colOffset) {
+        int row = start.getRow() + rowOffset;
+        int col = start.getColumn() + colOffset;
 
+        if (!board.isValidSquare(row, col)) {return;}
+        if (!board.isOccupiedByOwnPiece(row, col, start)) {
+            ChessPosition newPosition = new ChessPosition(row, col);
+            moves.add(new ChessMove(start, newPosition, null));
+        }
+    }
 }
