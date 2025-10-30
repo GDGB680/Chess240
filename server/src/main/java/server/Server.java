@@ -1,7 +1,6 @@
 package server;
 
-import dataaccess.MemoryDataAccess;
-import dataaccess.DataAccess;
+import dataaccess.*;
 import handler.Handler;
 import io.javalin.Javalin;
 
@@ -10,19 +9,23 @@ public class Server {
     private final Handler handler;
 
     public Server() {
-        DataAccess dataAccess = new MemoryDataAccess();
-        handler = new Handler(dataAccess);
+        try {
+            DataAccess dataAccess = new MySQLDataAccess();
+            handler = new Handler(dataAccess);
 
-        javalin = Javalin.create(config -> {
-            config.staticFiles.add(staticFileConfig -> {
-                staticFileConfig.hostedPath = "/";
-                staticFileConfig.directory = "/web";
+            javalin = Javalin.create(config -> {
+                config.staticFiles.add(staticFileConfig -> {
+                    staticFileConfig.hostedPath = "/";
+                    staticFileConfig.directory = "/web";
+                });
             });
-        });
 
-//        javalin.jsonMapper(com.google.gson.Gson::new);
+    //        javalin.jsonMapper(com.google.gson.Gson::new);
 
-        configureRoutes();
+            configureRoutes();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Failed to initialize database", e);
+        }
     }
 
     private void configureRoutes() {
