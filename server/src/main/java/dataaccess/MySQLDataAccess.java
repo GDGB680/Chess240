@@ -140,6 +140,24 @@ public class MySQLDataAccess implements DataAccess {
 
     @Override
     public void clear() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            // Delete from auth_tokens first (foreign key dependency)
+            try (var ps = conn.prepareStatement("DELETE FROM auth_tokens")) {
+                ps.executeUpdate();
+            }
 
+            // Delete from games
+            try (var ps = conn.prepareStatement("DELETE FROM games")) {
+                ps.executeUpdate();
+            }
+
+            // Delete from users
+            try (var ps = conn.prepareStatement("DELETE FROM users")) {
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error clearing database: " + e.getMessage());
+        }
     }
+
 }
