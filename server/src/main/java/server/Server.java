@@ -19,9 +19,6 @@ public class Server {
                     staticFileConfig.directory = "/web";
                 });
             });
-
-    //        javalin.jsonMapper(com.google.gson.Gson::new);
-
             configureRoutes();
         } catch (DataAccessException e) {
             throw new RuntimeException("Failed to initialize database", e);
