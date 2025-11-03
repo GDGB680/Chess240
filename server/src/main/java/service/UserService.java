@@ -47,25 +47,17 @@ public class UserService {
             throw new DataAccessException("bad request");
         }
         UserData existingUser = dataAccess.getUser(user.username());
-
         if (existingUser == null) {
             throw new DataAccessException("unauthorized");
         }
-
-        // Hash the incoming password and compare
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         if (!BCrypt.checkpw(user.password(), existingUser.password())) {
             throw new DataAccessException("unauthorized");
         }
-
         String authToken = UUID.randomUUID().toString();
         AuthData authData = new AuthData(authToken, user.username());
         dataAccess.createAuthToken(authData);
-
         return new LoginResult(user.username(), authToken);
     }
-
-
 
 
 

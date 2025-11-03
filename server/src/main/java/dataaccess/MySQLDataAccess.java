@@ -61,13 +61,13 @@ public class MySQLDataAccess implements DataAccess {
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+//        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
 
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, user.username());
-                ps.setString(2, hashedPassword);
+                ps.setString(2, user.password());
                 ps.setString(3, user.email());
                 ps.executeUpdate();
             }
@@ -262,12 +262,10 @@ public class MySQLDataAccess implements DataAccess {
             try (var ps = conn.prepareStatement("DELETE FROM auth_tokens")) {
                 ps.executeUpdate();
             }
-
             // Delete from games
             try (var ps = conn.prepareStatement("DELETE FROM games")) {
                 ps.executeUpdate();
             }
-
             // Delete from users
             try (var ps = conn.prepareStatement("DELETE FROM users")) {
                 ps.executeUpdate();
