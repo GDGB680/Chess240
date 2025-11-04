@@ -1,7 +1,6 @@
-package service;
+package dataaccess;
 
 import chess.ChessGame;
-import dataaccess.*;
 import model.*;
 import org.junit.jupiter.api.*;
 import java.util.Collection;
