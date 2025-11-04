@@ -23,21 +23,15 @@ public class UserService {
         if (user.username() == null || user.password() == null || user.email() == null) {
             throw new DataAccessException("bad request");
         }
-
         if (dataAccess.getUser(user.username()) != null) {
             throw new DataAccessException("already taken");
         }
-
-        // Hash the password before saving
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         UserData newUser = new UserData(user.username(), hashedPassword, user.email());
-
         dataAccess.createUser(newUser);
-
         String authToken = UUID.randomUUID().toString();
         AuthData authData = new AuthData(authToken, user.username());
         dataAccess.createAuthToken(authData);
-
         return new RegisterResult(user.username(), authToken);
     }
 

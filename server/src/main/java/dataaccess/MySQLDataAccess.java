@@ -75,7 +75,6 @@ public class MySQLDataAccess implements DataAccess {
         }
     }
 
-
     @Override
     public UserData getUser(String userName) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
@@ -109,8 +108,6 @@ public class MySQLDataAccess implements DataAccess {
                 ps.setString(3, gameName);
                 ps.setString(4, gson.toJson(new ChessGame()));  // Create empty ChessGame as JSON
                 ps.executeUpdate();
-
-                // Get the generated game ID
                 try (var rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         int gameID = rs.getInt(1);
@@ -134,7 +131,6 @@ public class MySQLDataAccess implements DataAccess {
                     if (rs.next()) {
                         String gameStateJson = rs.getString("gameState");
                         ChessGame game = gson.fromJson(gameStateJson, ChessGame.class);
-
                         return new GameData(
                                 rs.getInt("gameID"),
                                 rs.getString("whiteUsername"),
@@ -154,7 +150,6 @@ public class MySQLDataAccess implements DataAccess {
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
         Collection<GameData> games = new ArrayList<>();
-
         try (var conn = DatabaseManager.getConnection()) {
             String statement = "SELECT gameID, whiteUsername, blackUsername, gameName, gameState FROM games";
             try (var ps = conn.prepareStatement(statement)) {
@@ -177,7 +172,6 @@ public class MySQLDataAccess implements DataAccess {
         } catch (SQLException e) {
             throw new DataAccessException("Error listing games: " + e.getMessage());
         }
-
         return games;
     }
 
@@ -270,5 +264,4 @@ public class MySQLDataAccess implements DataAccess {
             throw new DataAccessException("Error clearing database: " + e.getMessage());
         }
     }
-
 }
