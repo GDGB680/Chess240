@@ -1,6 +1,7 @@
-package client;
+package ui;
 
 import com.google.gson.Gson;
+import model.*;
 import datamodel.*;
 import java.net.URI;
 import java.net.http.HttpClient;
