@@ -1,5 +1,7 @@
 package ui;
 
+import client.ServerFacade;
+
 public class Main {
     public static void main(String[] args) {
         String host = "localhost";

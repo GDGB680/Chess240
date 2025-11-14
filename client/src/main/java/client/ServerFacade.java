@@ -1,4 +1,4 @@
-package ui;
+package client;
 
 import com.google.gson.Gson;
 import model.*;
