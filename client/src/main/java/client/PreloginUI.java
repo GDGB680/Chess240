@@ -1,6 +1,7 @@
-package ui;
+package client;
 
-import client.ServerFacade;
+import ui.EscapeSequences;
+
 import java.util.Scanner;
 
 public class PreloginUI {

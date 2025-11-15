@@ -1,6 +1,7 @@
-package ui;
+package client;
 
 import chess.*;
+import ui.EscapeSequences;
 
 public class ChessboardUI {
     private static final String[] FILES = {"a", "b", "c", "d", "e", "f", "g", "h"};
