@@ -77,7 +77,7 @@ public class PostloginUI {
     private void listGames() {
         try {
             ListGamesResult result = serverFacade.listGames();
-            games = result.games();
+            games = new ArrayList<>(result.games());
             System.out.println("\n--- Available Games ---");
             for (int i = 0; i < games.size(); i++) {
                 GameDTO game = games.get(i);
