@@ -15,7 +15,7 @@ public class PostloginUI {
         this.scanner = new Scanner(System.in);
         this.games = new ArrayList<>();
     }
-
+//What if instead of public boolean, it said pubic boolean??? Thoughts???
     public boolean run() { // Returns false if user logs out
         boolean running = true;
         while (running) {

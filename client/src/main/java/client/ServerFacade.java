@@ -14,8 +14,8 @@ public class ServerFacade {
     private final Gson gson;
     private String authToken;
 
-    public ServerFacade(String host, int port) {
-        this.serverUrl = "http://" + host + ":" + port;
+    public ServerFacade(int port) {
+        this.serverUrl = "http://localhost:" + port;
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
         this.authToken = null;

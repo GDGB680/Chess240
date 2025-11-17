@@ -3,10 +3,10 @@ import client.*;
 
 public class Main {
     public static void main(String[] args) {
-        String host = "localhost";
+//        String host = "localhost";
         int port = 8080;
 
-        ServerFacade serverFacade = new ServerFacade(host, port);
+        ServerFacade serverFacade = new ServerFacade(port);
 
         while (true) {
             PreloginUI preloginUI = new PreloginUI(serverFacade);
