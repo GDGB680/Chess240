@@ -58,7 +58,7 @@ public class ServerFacade {
         makeRequest("PUT", "/game", gson.toJson(request), authToken);
     }
 
-    private String makeRequest(String method, String path, String body, String token) throws Exception {
+    String makeRequest(String method, String path, String body, String token) throws Exception {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(new URI(serverUrl + path))
                 .method(method, body == null ?

@@ -20,7 +20,9 @@ public class UserService {
 
 
     public RegisterResult register(UserData user) throws DataAccessException {
-        if (user.username() == null || user.password() == null || user.email() == null) {
+        if (user.username() == null || user.username().isEmpty() ||
+                user.password() == null || user.password().isEmpty() ||
+                user.email() == null || user.email().isEmpty()) {
             throw new DataAccessException("bad request");
         }
         if (dataAccess.getUser(user.username()) != null) {
@@ -61,4 +63,6 @@ public class UserService {
         if (authData == null) {throw new DataAccessException("unauthorized");}
         dataAccess.deleteAuthToken(user.authToken());
     }
+
+
 }
