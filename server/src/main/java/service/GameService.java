@@ -68,7 +68,7 @@ public class GameService {
         }
 
         // If no color specified, user joins as observer
-        if (playerColor == null || playerColor.isEmpty()) {
+        if (playerColor == null || playerColor.isEmpty() || playerColor.equalsIgnoreCase("OBSERVER")) {
             return;
         }
 
