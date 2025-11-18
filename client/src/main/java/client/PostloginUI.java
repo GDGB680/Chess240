@@ -52,7 +52,7 @@ public class PostloginUI {
                     break;
                 case "6":
                 case "logout":
-                    logout();
+                        logout();
                     return; // Return to prelogin
                 default:
                     System.out.println("Invalid command. Try again.");
@@ -116,8 +116,8 @@ public class PostloginUI {
             serverFacade.joinGame(game.gameID(), playerColor);
             System.out.println("✓ Joined game!");
 
-            // Draw chessboard
-            drawChessboard(playerColor.equals("WHITE"));
+            ChessboardUI.displayBoard(game.game().getBoard(), playerColor.equals("WHITE"));
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");
         } catch (Exception e) {
@@ -143,8 +143,8 @@ public class PostloginUI {
             serverFacade.joinGame(game.gameID(), "OBSERVER");
             System.out.println("✓ Observing game!");
 
-            // Draw from white's perspective
-            drawChessboard(true);
+            ChessboardUI.displayBoard(game.game().getBoard(), true);
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");
         } catch (Exception e) {
@@ -152,29 +152,6 @@ public class PostloginUI {
         }
     }
 
-    private void drawChessboard(boolean whitePerspective) {
-        // Simple ASCII chessboard
-        String[] files = {"a", "b", "c", "d", "e", "f", "g", "h"};
-        String[] ranks = {"8", "7", "6", "5", "4", "3", "2", "1"};
-
-        if (!whitePerspective) {
-            // Flip for black perspective
-            files = new String[]{"h", "g", "f", "e", "d", "c", "b", "a"};
-            ranks = new String[]{"1", "2", "3", "4", "5", "6", "7", "8"};
-        }
-
-        System.out.println("\n  " + String.join(" ", files));
-        for (String rank : ranks) {
-            System.out.print(rank + " ");
-            for (int f = 0; f < 8; f++) {
-                int sum = (whitePerspective ? 8 - Integer.parseInt(rank) : Integer.parseInt(rank) - 1) + f;
-                String square = (sum % 2 == 0) ? "⬜" : "⬛";
-                System.out.print(square + " ");
-            }
-            System.out.println(rank);
-        }
-        System.out.println("  " + String.join(" ", files));
-    }
 
     private void logout() {
         try {
