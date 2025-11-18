@@ -2,7 +2,7 @@ package client;
 
 import com.google.gson.Gson;
 import model.*;
-import datamodel.*;
+import model.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

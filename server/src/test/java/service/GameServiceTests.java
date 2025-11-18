@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import datamodel.*;
+import datamodel.ListGamesResult;
 import model.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;

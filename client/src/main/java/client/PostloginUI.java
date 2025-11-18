@@ -1,6 +1,6 @@
 package client;
 
-import datamodel.*;
+import model.*;
 import java.util.*;
 import java.util.Scanner;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public class PostloginUI {
     private final Scanner scanner;
     private final ServerFacade serverFacade;
-    private List<GameDTO> games;
+    private List<GameData> games;
 
     public PostloginUI(ServerFacade serverFacade) {
         this.serverFacade = serverFacade;
@@ -78,7 +78,7 @@ public class PostloginUI {
             games = new ArrayList<>(result.games());
             System.out.println("\n--- Available Games ---");
             for (int i = 0; i < games.size(); i++) {
-                GameDTO game = games.get(i);
+                GameData game = games.get(i);
                 String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Open";
                 String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Open";
                 System.out.printf("%d. %s - White: %s, Black: %s%n",
@@ -103,7 +103,7 @@ public class PostloginUI {
                 return;
             }
 
-            GameDTO game = games.get(gameNum - 1);
+            GameData game = games.get(gameNum - 1);
             System.out.println("Choose color: (w)hite or (b)lack");
             String color = scanner.nextLine().trim().toLowerCase();
 
@@ -139,7 +139,7 @@ public class PostloginUI {
                 return;
             }
 
-            GameDTO game = games.get(gameNum - 1);
+            GameData game = games.get(gameNum - 1);
             serverFacade.joinGame(game.gameID(), "OBSERVER");
             System.out.println("✓ Observing game!");
 

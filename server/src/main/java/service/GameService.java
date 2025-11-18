@@ -1,11 +1,10 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
-import datamodel.CreateGameResult;
+import model.CreateGameResult;
 import datamodel.ListGamesResult;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public class GameService {
                     game.gameName()
             ));
         }
-        return new ListGamesResult(games);
+        return new datamodel.ListGamesResult(games);
     }
 
     public void joinGame(int gameID, String playerColor, String authToken) throws DataAccessException {

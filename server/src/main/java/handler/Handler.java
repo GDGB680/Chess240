@@ -105,7 +105,7 @@ public class Handler {
                 throw new DataAccessException("unauthorized");
             }
 
-            ListGamesResult result = gameService.listGames(authToken);
+            datamodel.ListGamesResult result = gameService.listGames(authToken);
             String gsonresult = gson.toJson(result);
             ctx.status(200);
             ctx.json(gsonresult);
