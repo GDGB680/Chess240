@@ -15,9 +15,9 @@ public class PostloginUI {
         this.scanner = new Scanner(System.in);
         this.games = new ArrayList<>();
     }
-    public boolean run() { // Returns false if user logs out
+    public void run() { // Returns false if user logs out
         boolean running = true;
-        while (running) {
+        while (true) {
             System.out.println("\n--- Main Menu ---");
             System.out.println("1. Create Game");
             System.out.println("2. List Games");
@@ -53,12 +53,11 @@ public class PostloginUI {
                 case "6":
                 case "logout":
                     logout();
-                    return false; // Return to prelogin
+                    return; // Return to prelogin
                 default:
                     System.out.println("Invalid command. Try again.");
             }
         }
-        return true;
     }
 
     private void createGame() {
