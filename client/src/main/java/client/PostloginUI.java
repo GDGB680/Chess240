@@ -103,20 +103,21 @@ public class PostloginUI {
                 return;
             }
 
-            GameData game = games.get(gameNum - 1);
+            GameData selectedGame = games.get(gameNum - 1);
+
             System.out.println("Choose color: (w)hite or (b)lack");
             String color = scanner.nextLine().trim().toLowerCase();
-
             if (!color.equals("w") && !color.equals("b")) {
                 System.out.println("Invalid color.");
                 return;
             }
 
             String playerColor = color.equals("w") ? "WHITE" : "BLACK";
-            serverFacade.joinGame(game.gameID(), playerColor);
+            serverFacade.joinGame(selectedGame.gameID(), playerColor);
             System.out.println("✓ Joined game!");
 
-            ChessboardUI.displayBoard(game.game().getBoard(), playerColor.equals("WHITE"));
+            GameData fullGame = serverFacade.getGame(selectedGame.gameID());
+            ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");
@@ -139,11 +140,12 @@ public class PostloginUI {
                 return;
             }
 
-            GameData game = games.get(gameNum - 1);
-            serverFacade.joinGame(game.gameID(), "OBSERVER");
+            GameData selectedGame = games.get(gameNum - 1);
+            serverFacade.joinGame(selectedGame.gameID(), "OBSERVER");
             System.out.println("✓ Observing game!");
 
-            ChessboardUI.displayBoard(game.game().getBoard(), true);
+            GameData fullGame = serverFacade.getGame(selectedGame.gameID());
+            ChessboardUI.displayBoard(fullGame.game().getBoard(), true);
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");

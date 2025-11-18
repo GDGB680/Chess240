@@ -144,6 +144,18 @@ public class Handler {
         }
     }
 
+//    public void getGame(Context ctx) {
+//        try {
+//            int gameID = Integer.parseInt(ctx.pathParam("gameID"));
+//            String authToken = ctx.header("Authorization");
+//
+//            GameData game = gameService.getGame(gameID, authToken);
+//            ctx.json(game);
+//        } catch (Exception e) {
+//            handleException(ctx, e);
+//        }
+//    }
+
     public void joinGame(Context ctx) {
         try {
             String authToken = ctx.header("authorization");

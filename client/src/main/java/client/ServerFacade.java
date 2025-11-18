@@ -53,6 +53,11 @@ public class ServerFacade {
         return gson.fromJson(response, CreateGameResult.class);
     }
 
+    public GameData getGame(int gameId) throws Exception {
+        var response = makeRequest("GET", "/game/" + gameId, null, authToken);
+        return gson.fromJson(response, GameData.class);
+    }
+
     public void joinGame(int gameId, String playerColor) throws Exception {
         var request = new JoinGameRequest(playerColor, gameId);
         makeRequest("PUT", "/game", gson.toJson(request), authToken);
