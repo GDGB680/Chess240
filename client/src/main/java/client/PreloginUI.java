@@ -26,10 +26,10 @@ public class PreloginUI {
 
             switch (input) {
                 case "1", "register" -> {
-                    if (register()) return true;
+                    if (register()) {return true;}
                 }
                 case "2", "login" -> {
-                    if (login()) return true;
+                    if (login()) {return true;}
                 }
                 case "3", "help" -> printHelp();
                 case "4", "quit" -> {

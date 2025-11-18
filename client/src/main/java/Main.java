@@ -10,7 +10,7 @@ public class Main {
 
         while (true) {
             PreloginUI preloginUI = new PreloginUI(serverFacade);
-            if (!preloginUI.run()) break; // User quit
+            if (!preloginUI.run()) {break;} // User quit
 
             // User is now logged in
             PostloginUI postloginUI = new PostloginUI(serverFacade);
