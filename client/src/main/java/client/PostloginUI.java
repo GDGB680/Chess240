@@ -95,8 +95,7 @@ public class PostloginUI {
             ListGamesResult result = serverFacade.listGames();
             games = new ArrayList<>(result.games());
             System.out.println("\n--- Available Games ---");
-            for (int i = 0; i < games.size(); i++) {
-                GameData game = games.get(i);
+            for (GameData game : games) {
                 String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Open";
                 String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Open";
                 System.out.printf("%s - White: %s, Black: %s%n",
@@ -140,7 +139,15 @@ public class PostloginUI {
             return;
         }
 
-        String currentUsername = serverFacade.getUsername();  // You may need to add this method
+        try {
+            selectedGame = serverFacade.getGame(selectedGame.gameID());
+        } catch (Exception e) {
+            System.out.println("✗ Failed to fetch game details: " + e.getMessage());
+            return;
+        }
+
+
+        String currentUsername = serverFacade.getUsername();
 
         // Check if user is already in the game
         if (currentUsername.equals(selectedGame.whiteUsername()) ||
@@ -158,20 +165,45 @@ public class PostloginUI {
             }
         }
 
-        System.out.println("Choose color: (w)hite or (b)lack");
-        String color = scanner.nextLine().trim().toLowerCase();
-        if (!color.equals("w") && !color.equals("b")) {
-            System.out.println("Invalid color.");
-            return;
+        String playerColor;
+        boolean whiteIsTaken = selectedGame.whiteUsername() != null;
+        boolean blackIsTaken = selectedGame.blackUsername() != null;
+
+        if (whiteIsTaken && blackIsTaken) {
+            // Both colors taken - join as observer
+            System.out.println("Both colors are taken. Joining as observer...");
+            playerColor = null;
+        } else if (whiteIsTaken) {
+            // White is taken, assign black
+            System.out.println("White is taken. Joining as black...");
+            playerColor = "BLACK";
+        } else if (blackIsTaken) {
+            // Black is taken, assign white
+            System.out.println("Black is taken. Joining as white...");
+            playerColor = "WHITE";
+        } else {
+            // Both colors available - ask user
+            System.out.println("Choose color: (w)hite or (b)lack");
+            String color = scanner.nextLine().trim().toLowerCase();
+            if (!color.equals("w") && !color.equals("b")) {
+                System.out.println("Invalid color.");
+                return;
+            }
+            playerColor = color.equals("w") ? "WHITE" : "BLACK";
         }
 
         try {
-            String playerColor = color.equals("w") ? "WHITE" : "BLACK";
-            serverFacade.joinGame(selectedGame.gameID(), playerColor);
-            System.out.println("✓ Joined game!");
+            serverFacade.joinGame(selectedGame.gameID(), playerColor == null ? "" : playerColor);
+
+            if (playerColor == null) {
+                System.out.println("✓ Joined game as observer!");
+            } else {
+                System.out.println("✓ Joined game as " + playerColor + "!");
+            }
 
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
-            ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
+            boolean asWhite = "WHITE".equals(playerColor);
+            ChessboardUI.displayBoard(fullGame.game().getBoard(), asWhite);
 
         } catch (Exception e) {
             System.out.println("✗ Failed to join game: " + e.getMessage());
