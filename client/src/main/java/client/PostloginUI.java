@@ -15,8 +15,8 @@ public class PostloginUI {
         this.scanner = new Scanner(System.in);
         this.games = new ArrayList<>();
     }
-    public void run() { // Returns false if user logs out
-        boolean running = true;
+
+    public void run() {
         while (true) {
             System.out.println("\n--- Main Menu ---");
             System.out.println("1. Create Game");
@@ -26,36 +26,19 @@ public class PostloginUI {
             System.out.println("5. Help");
             System.out.println("6. Logout");
             System.out.print("Enter command: ");
-
             String input = scanner.nextLine().trim();
 
             switch (input.toLowerCase()) {
-                case "1":
-                case "create":
-                    createGame();
-                    break;
-                case "2":
-                case "list":
-                    listGames();
-                    break;
-                case "3":
-                case "play":
-                    playGame();
-                    break;
-                case "4":
-                case "observe":
-                    observeGame();
-                    break;
-                case "5":
-                case "help":
-                    printHelp();
-                    break;
-                case "6":
-                case "logout":
-                        logout();
-                    return; // Return to prelogin
-                default:
-                    System.out.println("Invalid command. Try again.");
+                case "1", "create" -> createGame();
+                case "2", "list" -> listGames();
+                case "3", "play" -> playGame();
+                case "4", "observe" -> observeGame();
+                case "5", "help" -> printHelp();
+                case "6", "logout" -> {
+                    logout();
+                    return;
+                }
+                default -> System.out.println("Invalid command. Try again.");
             }
         }
     }
@@ -63,6 +46,7 @@ public class PostloginUI {
     private void createGame() {
         System.out.print("Game name: ");
         String gameName = scanner.nextLine().trim();
+
         try {
             CreateGameResult createResult = serverFacade.createGame(gameName);
             System.out.println("✓ Game created successfully!");
@@ -72,36 +56,41 @@ public class PostloginUI {
 
             System.out.print("Would you like to join this game? (y/n): ");
             String answer = scanner.nextLine().trim().toLowerCase();
+
             if (answer.equals("y") || answer.equals("yes")) {
                 System.out.println("Choose color: (w)hite or (b)lack");
                 String color = scanner.nextLine().trim().toLowerCase();
+
                 if (color.equals("w") || color.equals("b")) {
                     String playerColor = color.equals("w") ? "WHITE" : "BLACK";
-
                     serverFacade.joinGame(createResult.gameID(), playerColor);
                     System.out.println("✓ Joined game!");
-
                     GameData fullGame = serverFacade.getGame(createResult.gameID());
                     ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
                 }
             }
-
         } catch (Exception e) {
             System.out.println("✗ Failed to create game: " + e.getMessage());
         }
     }
 
-
     private void listGames() {
         try {
             ListGamesResult result = serverFacade.listGames();
             games = new ArrayList<>(result.games());
+
             System.out.println("\n--- Available Games ---");
-            for (GameData game : games) {
+            if (games.isEmpty()) {
+                System.out.println("No games available.");
+                return;
+            }
+
+            for (int i = 0; i < games.size(); i++) {
+                GameData game = games.get(i);
                 String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Open";
                 String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Open";
-                System.out.printf("%s - White: %s, Black: %s%n",
-                        game.gameName(), whitePlayer, blackPlayer);
+                System.out.printf("%d. %s - White: %s, Black: %s%n",
+                        i + 1, game.gameName(), whitePlayer, blackPlayer);
             }
         } catch (Exception e) {
             System.out.println("✗ Failed to list games: " + e.getMessage());
@@ -124,22 +113,23 @@ public class PostloginUI {
             return;
         }
 
-        System.out.print("Enter game name: ");
-        String gameName = scanner.nextLine().trim();
+        System.out.print("Enter game number: ");
+        String input = scanner.nextLine().trim();
 
-        // Find game by name
-        GameData selectedGame = null;
-        for (GameData game : games) {
-            if (game.gameName().equalsIgnoreCase(gameName)) {
-                selectedGame = game;
-                break;
-            }
-        }
-
-        if (selectedGame == null) {
-            System.out.println("✗ Game not found: " + gameName);
+        int gameIndex;
+        try {
+            gameIndex = Integer.parseInt(input) - 1; // Convert to 0-based index
+        } catch (NumberFormatException e) {
+            System.out.println("✗ Invalid number.");
             return;
         }
+
+        if (gameIndex < 0 || gameIndex >= games.size()) {
+            System.out.println("✗ Invalid game number.");
+            return;
+        }
+
+        GameData selectedGame = games.get(gameIndex);
 
         try {
             selectedGame = serverFacade.getGame(selectedGame.gameID());
@@ -148,14 +138,12 @@ public class PostloginUI {
             return;
         }
 
-
         String currentUsername = serverFacade.getUsername();
 
         // Check if user is already in the game
         if (currentUsername.equals(selectedGame.whiteUsername()) ||
                 currentUsername.equals(selectedGame.blackUsername())) {
             System.out.println("You're already in this game!");
-
             try {
                 GameData fullGame = serverFacade.getGame(selectedGame.gameID());
                 boolean asWhite = currentUsername.equals(selectedGame.whiteUsername());
@@ -172,19 +160,15 @@ public class PostloginUI {
         boolean blackIsTaken = selectedGame.blackUsername() != null;
 
         if (whiteIsTaken && blackIsTaken) {
-            // Both colors taken - join as observer
             System.out.println("Both colors are taken. Joining as observer...");
             playerColor = null;
         } else if (whiteIsTaken) {
-            // White is taken, assign black
             System.out.println("White is taken. Joining as black...");
             playerColor = "BLACK";
         } else if (blackIsTaken) {
-            // Black is taken, assign white
             System.out.println("Black is taken. Joining as white...");
             playerColor = "WHITE";
         } else {
-            // Both colors available - ask user
             System.out.println("Choose color: (w)hite or (b)lack");
             String color = scanner.nextLine().trim().toLowerCase();
             if (!color.equals("w") && !color.equals("b")) {
@@ -196,7 +180,6 @@ public class PostloginUI {
 
         try {
             serverFacade.joinGame(selectedGame.gameID(), playerColor == null ? "" : playerColor);
-
             if (playerColor == null) {
                 System.out.println("✓ Joined game as observer!");
             } else {
@@ -206,12 +189,10 @@ public class PostloginUI {
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
             boolean asWhite = "WHITE".equals(playerColor);
             ChessboardUI.displayBoard(fullGame.game().getBoard(), asWhite);
-
         } catch (Exception e) {
             System.out.println("✗ Failed to join game: " + e.getMessage());
         }
     }
-
 
     private void observeGame() {
         if (games.isEmpty()) {
@@ -229,35 +210,33 @@ public class PostloginUI {
             return;
         }
 
-        System.out.print("Enter game name: ");
-        String gameName = scanner.nextLine().trim();
+        System.out.print("Enter game number: ");
+        String input = scanner.nextLine().trim();
 
-        // Find game by name
-        GameData selectedGame = null;
-        for (GameData game : games) {
-            if (game.gameName().equalsIgnoreCase(gameName)) {
-                selectedGame = game;
-                break;
-            }
-        }
-
-        if (selectedGame == null) {
-            System.out.println("✗ Game not found: " + gameName);
+        int gameIndex;
+        try {
+            gameIndex = Integer.parseInt(input) - 1; // Convert to 0-based index
+        } catch (NumberFormatException e) {
+            System.out.println("✗ Invalid number.");
             return;
         }
+
+        if (gameIndex < 0 || gameIndex >= games.size()) {
+            System.out.println("✗ Invalid game number.");
+            return;
+        }
+
+        GameData selectedGame = games.get(gameIndex);
 
         try {
             serverFacade.joinGame(selectedGame.gameID(), null);
             System.out.println("✓ Observing game!");
-
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
-            ChessboardUI.displayBoard(fullGame.game().getBoard(), true); // Default to white's perspective
-
+            ChessboardUI.displayBoard(fullGame.game().getBoard(), true);
         } catch (Exception e) {
             System.out.println("✗ Failed to observe game: " + e.getMessage());
         }
     }
-
 
     private void logout() {
         try {
@@ -270,13 +249,13 @@ public class PostloginUI {
 
     private void printHelp() {
         System.out.println("""
-            Commands:
-            create   - Create a new game
-            list     - List all available games
-            play     - Join a game to play
-            observe  - Observe a game
-            help     - Show this help message
-            logout   - Logout and return to login screen
-        """);
+                Commands:
+                  create - Create a new game
+                  list - List all available games
+                  play - Join a game to play
+                  observe - Observe a game
+                  help - Show this help message
+                  logout - Logout and return to login screen
+                """);
     }
 }
