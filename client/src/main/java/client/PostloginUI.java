@@ -81,8 +81,8 @@ public class PostloginUI {
                 GameData game = games.get(i);
                 String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Open";
                 String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Open";
-                System.out.printf("%d. %s - White: %s, Black: %s%n",
-                        i + 1, game.gameName(), whitePlayer, blackPlayer);
+                System.out.printf("%s - White: %s, Black: %s%n",
+                        game.gameName(), whitePlayer, blackPlayer);
             }
         } catch (Exception e) {
             System.out.println("✗ Failed to list games: " + e.getMessage());
@@ -91,45 +91,71 @@ public class PostloginUI {
 
     private void playGame() {
         if (games.isEmpty()) {
-            System.out.println("No games available. Try listing games first.");
+            try {
+                var result = serverFacade.listGames();
+                games = new ArrayList<>(result.games());
+            } catch (Exception e) {
+                System.out.println("✗ Failed to fetch games: " + e.getMessage());
+                return;
+            }
+        }
+
+        if (games.isEmpty()) {
+            System.out.println("No games available. Create a game first.");
             return;
         }
 
-        System.out.print("Enter game number: ");
+        System.out.print("Enter game name: ");
+        String gameName = scanner.nextLine().trim();
+
+        // Find game by name
+        GameData selectedGame = null;
+        for (GameData game : games) {
+            if (game.gameName().equalsIgnoreCase(gameName)) {
+                selectedGame = game;
+                break;
+            }
+        }
+
+        if (selectedGame == null) {
+            System.out.println("✗ Game not found: " + gameName);
+            return;
+        }
+
+        System.out.println("Choose color: (w)hite or (b)lack");
+        String color = scanner.nextLine().trim().toLowerCase();
+        if (!color.equals("w") && !color.equals("b")) {
+            System.out.println("Invalid color.");
+            return;
+        }
+
         try {
-            int gameNum = Integer.parseInt(scanner.nextLine().trim());
-            if (gameNum < 1 || gameNum > games.size()) {
-                System.out.println("Invalid game number.");
-                return;
-            }
-
-            GameData selectedGame = games.get(gameNum - 1);
-
-            System.out.println("Choose color: (w)hite or (b)lack");
-            String color = scanner.nextLine().trim().toLowerCase();
-            if (!color.equals("w") && !color.equals("b")) {
-                System.out.println("Invalid color.");
-                return;
-            }
-
             String playerColor = color.equals("w") ? "WHITE" : "BLACK";
             serverFacade.joinGame(selectedGame.gameID(), playerColor);
             System.out.println("✓ Joined game!");
 
-
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
             ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
 
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
         } catch (Exception e) {
             System.out.println("✗ Failed to join game: " + e.getMessage());
         }
     }
 
+
     private void observeGame() {
         if (games.isEmpty()) {
-            System.out.println("No games available. Try listing games first.");
+            try {
+                var result = serverFacade.listGames();
+                games = new ArrayList<>(result.games());
+            } catch (Exception e) {
+                System.out.println("✗ Failed to fetch games: " + e.getMessage());
+                return;
+            }
+        }
+
+        if (games.isEmpty()) {
+            System.out.println("No games available. Create a game first.");
             return;
         }
 
