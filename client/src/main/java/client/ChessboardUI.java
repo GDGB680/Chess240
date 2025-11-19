@@ -4,6 +4,7 @@ import chess.*;
 import ui.EscapeSequences;
 
 public class ChessboardUI {
+
     private static final String[] FILES = {"a", "b", "c", "d", "e", "f", "g", "h"};
     private static final String[] RANKS = {"8", "7", "6", "5", "4", "3", "2", "1"};
 
@@ -12,10 +13,17 @@ public class ChessboardUI {
         String[] displayRanks = isWhitePerspective ? RANKS : new String[]{"1", "2", "3", "4", "5", "6", "7", "8"};
 
         System.out.print(EscapeSequences.ERASE_SCREEN);
-        System.out.println("\n  " + String.join(" ", displayFiles));
 
+        System.out.print("\n  ");  // 2 spaces to align with board
+        for (String file : displayFiles) {
+            System.out.print(file + "   ");  // file + 3 spaces
+        }
+        System.out.println();
+
+        // Print board rows
         for (String rank : displayRanks) {
-            System.out.print(rank + " ");
+            System.out.print(rank + " ");  // Rank label on left
+
             for (String file : displayFiles) {
                 int row = Integer.parseInt(rank);
                 int col = file.charAt(0) - 'a' + 1;
@@ -25,26 +33,28 @@ public class ChessboardUI {
                 String pieceString = getPieceString(piece);
                 System.out.print(square + pieceString + EscapeSequences.RESET_BG_COLOR);
             }
-            System.out.println(" " + rank);
+
+            System.out.println(" " + rank);  // Rank label on right
         }
-        System.out.println("  " + String.join(" ", displayFiles));
+
+        // Print bottom file labels
+        System.out.print("  ");  // 2
+        for (String file : displayFiles) {
+            System.out.print(file + "   ");  // file + 3 spaces
+        }
+        System.out.println();
     }
-
-
 
     private static String getSquareColor(int row, int col) {
         boolean isLight = (row + col) % 2 == 1;
         return isLight ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
     }
 
-
     private static String getPieceString(ChessPiece piece) {
-        if (piece == null) {return EscapeSequences.EMPTY;}
-
-
+        if (piece == null) {
+            return EscapeSequences.EMPTY;
+        }
         boolean isWhite = piece.getTeamColor() == ChessGame.TeamColor.WHITE;
-
-
         return switch (piece.getPieceType()) {
             case KING -> isWhite ? EscapeSequences.WHITE_KING : EscapeSequences.BLACK_KING;
             case QUEEN -> isWhite ? EscapeSequences.WHITE_QUEEN : EscapeSequences.BLACK_QUEEN;
@@ -55,6 +65,4 @@ public class ChessboardUI {
             default -> EscapeSequences.EMPTY;
         };
     }
-
-
 }

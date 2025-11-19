@@ -63,32 +63,34 @@ public class PostloginUI {
     private void createGame() {
         System.out.print("Game name: ");
         String gameName = scanner.nextLine().trim();
-
         try {
-            serverFacade.createGame(gameName);
+            CreateGameResult createResult = serverFacade.createGame(gameName);
             System.out.println("✓ Game created successfully!");
+
             var result = serverFacade.listGames();
             games = new ArrayList<>(result.games());
 
-//            System.out.print("Would you like to join this game? (y/n): ");
-//            String answer = scanner.nextLine().trim().toLowerCase();
-//            if (answer.equals("y") || answer.equals("yes")) {
-//                System.out.println("Choose color: (w)hite or (b)lack");
-//                String color = scanner.nextLine().trim().toLowerCase();
-//                if (color.equals("w") || color.equals("b")) {
-//                    String playerColor = color.equals("w") ? "WHITE" : "BLACK";
-//                    serverFacade.joinGame(result.gameID(), playerColor);
-//                    System.out.println("✓ Joined game!");
-//
-//                    GameData fullGame = serverFacade.getGame(result.gameID());
-//                    ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
-//                }
-//            }
+            System.out.print("Would you like to join this game? (y/n): ");
+            String answer = scanner.nextLine().trim().toLowerCase();
+            if (answer.equals("y") || answer.equals("yes")) {
+                System.out.println("Choose color: (w)hite or (b)lack");
+                String color = scanner.nextLine().trim().toLowerCase();
+                if (color.equals("w") || color.equals("b")) {
+                    String playerColor = color.equals("w") ? "WHITE" : "BLACK";
+
+                    serverFacade.joinGame(createResult.gameID(), playerColor);
+                    System.out.println("✓ Joined game!");
+
+                    GameData fullGame = serverFacade.getGame(createResult.gameID());
+                    ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
+                }
+            }
 
         } catch (Exception e) {
             System.out.println("✗ Failed to create game: " + e.getMessage());
         }
     }
+
 
     private void listGames() {
         try {
@@ -245,7 +247,7 @@ public class PostloginUI {
         }
 
         try {
-            serverFacade.joinGame(selectedGame.gameID(), "");
+            serverFacade.joinGame(selectedGame.gameID(), null);
             System.out.println("✓ Observing game!");
 
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());

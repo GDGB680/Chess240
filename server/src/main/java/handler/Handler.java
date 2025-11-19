@@ -184,10 +184,10 @@ public class Handler {
 
             String playerColor = request.playerColor();
 
-            // playerColor must be WHITE or BLACK or Observer
-            if (playerColor == null || playerColor.isEmpty() ||
-                    (!playerColor.equals("WHITE") && !playerColor.equals("BLACK") && !playerColor.equals("OBSERVER"))) {
-                throw new DataAccessException("bad request");
+            if (playerColor != null && !playerColor.isEmpty()) {
+                if (!playerColor.equals("WHITE") && !playerColor.equals("BLACK") && !playerColor.equals("OBSERVER")) {
+                    throw new DataAccessException("bad request");
+                }
             }
 
             gameService.joinGame(gameID, playerColor, authToken);
