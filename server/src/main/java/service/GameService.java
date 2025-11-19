@@ -48,6 +48,22 @@ public class GameService {
         return new datamodel.ListGamesResult(games);
     }
 
+    public GameData getGame(int gameID, String authToken) throws DataAccessException {
+        // Validate auth token
+        AuthData authData = dataAccess.getAuthToken(authToken);
+        if (authData == null) {
+            throw new DataAccessException("unauthorized");
+        }
+
+        // Get the game
+        GameData gameData = dataAccess.getGame(gameID);
+        if (gameData == null) {
+            throw new DataAccessException("bad request");
+        }
+
+        return gameData;  // Return full GameData with ChessGame object
+    }
+
     public void joinGame(int gameID, String playerColor, String authToken) throws DataAccessException {
         // Validate auth token
         AuthData authData = dataAccess.getAuthToken(authToken);

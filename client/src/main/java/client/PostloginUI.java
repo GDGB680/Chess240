@@ -116,6 +116,7 @@ public class PostloginUI {
             serverFacade.joinGame(selectedGame.gameID(), playerColor);
             System.out.println("✓ Joined game!");
 
+
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
             ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
 

@@ -17,8 +17,8 @@ public class ChessboardUI {
         for (String rank : displayRanks) {
             System.out.print(rank + " ");
             for (String file : displayFiles) {
-                int row = 9 - Integer.parseInt(rank);
-                int col = file.charAt(0) - 'a';
+                int row = Integer.parseInt(rank);
+                int col = file.charAt(0) - 'a' + 1;
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
 
                 String square = getSquareColor(row, col);

@@ -144,17 +144,26 @@ public class Handler {
         }
     }
 
-//    public void getGame(Context ctx) {
-//        try {
-//            int gameID = Integer.parseInt(ctx.pathParam("gameID"));
-//            String authToken = ctx.header("Authorization");
-//
-//            GameData game = gameService.getGame(gameID, authToken);
-//            ctx.json(game);
-//        } catch (Exception e) {
-//            handleException(ctx, e);
-//        }
-//    }
+    public void getGame(Context ctx) {
+        try {
+            int gameID = Integer.parseInt(ctx.pathParam("gameID"));
+            String authToken = ctx.header("authorization");  // lowercase 'a'
+
+            if (authToken == null || authToken.isEmpty()) {
+                throw new DataAccessException("unauthorized");
+            }
+
+            GameData game = gameService.getGame(gameID, authToken);
+            String gsonResult = gson.toJson(game);
+            ctx.status(200);
+            ctx.json(gsonResult);
+        } catch (DataAccessException e) {
+            handleDataAccessException(ctx, e);
+        } catch (Exception e) {
+            handleException(ctx, e);
+        }
+    }
+
 
     public void joinGame(Context ctx) {
         try {
