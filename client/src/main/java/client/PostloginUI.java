@@ -67,6 +67,24 @@ public class PostloginUI {
         try {
             serverFacade.createGame(gameName);
             System.out.println("✓ Game created successfully!");
+            var result = serverFacade.listGames();
+            games = new ArrayList<>(result.games());
+
+//            System.out.print("Would you like to join this game? (y/n): ");
+//            String answer = scanner.nextLine().trim().toLowerCase();
+//            if (answer.equals("y") || answer.equals("yes")) {
+//                System.out.println("Choose color: (w)hite or (b)lack");
+//                String color = scanner.nextLine().trim().toLowerCase();
+//                if (color.equals("w") || color.equals("b")) {
+//                    String playerColor = color.equals("w") ? "WHITE" : "BLACK";
+//                    serverFacade.joinGame(result.gameID(), playerColor);
+//                    System.out.println("✓ Joined game!");
+//
+//                    GameData fullGame = serverFacade.getGame(result.gameID());
+//                    ChessboardUI.displayBoard(fullGame.game().getBoard(), playerColor.equals("WHITE"));
+//                }
+//            }
+
         } catch (Exception e) {
             System.out.println("✗ Failed to create game: " + e.getMessage());
         }
@@ -120,6 +138,24 @@ public class PostloginUI {
         if (selectedGame == null) {
             System.out.println("✗ Game not found: " + gameName);
             return;
+        }
+
+        String currentUsername = serverFacade.getUsername();  // You may need to add this method
+
+        // Check if user is already in the game
+        if (currentUsername.equals(selectedGame.whiteUsername()) ||
+                currentUsername.equals(selectedGame.blackUsername())) {
+            System.out.println("You're already in this game!");
+
+            try {
+                GameData fullGame = serverFacade.getGame(selectedGame.gameID());
+                boolean asWhite = currentUsername.equals(selectedGame.whiteUsername());
+                ChessboardUI.displayBoard(fullGame.game().getBoard(), asWhite);
+                return;
+            } catch (Exception e) {
+                System.out.println("✗ Failed to display board: " + e.getMessage());
+                return;
+            }
         }
 
         System.out.println("Choose color: (w)hite or (b)lack");

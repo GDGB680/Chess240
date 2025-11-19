@@ -13,6 +13,7 @@ public class ServerFacade {
     private final HttpClient httpClient;
     private final Gson gson;
     private String authToken;
+    private String currentUsername;
 
     public ServerFacade(int port) {
         this.serverUrl = "http://localhost:" + port;
@@ -26,6 +27,7 @@ public class ServerFacade {
         var response = makeRequest("POST", "/user", gson.toJson(user), null);
         AuthData authData = gson.fromJson(response, AuthData.class);
         this.authToken = authData.authToken();
+        this.currentUsername = username;
         return authData;
     }
 
@@ -34,6 +36,7 @@ public class ServerFacade {
         var response = makeRequest("POST", "/session", gson.toJson(user), null);
         AuthData authData = gson.fromJson(response, AuthData.class);
         this.authToken = authData.authToken();
+        this.currentUsername = username;
         return authData;
     }
 
@@ -85,7 +88,6 @@ public class ServerFacade {
         return response.body();
     }
 
-    public String getAuthToken() {
-        return authToken;
-    }
+    public String getAuthToken() {return authToken;}
+    public String getUsername() {return currentUsername;}
 }
