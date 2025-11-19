@@ -227,23 +227,30 @@ public class PostloginUI {
             return;
         }
 
-        System.out.print("Enter game number: ");
-        try {
-            int gameNum = Integer.parseInt(scanner.nextLine().trim());
-            if (gameNum < 1 || gameNum > games.size()) {
-                System.out.println("Invalid game number.");
-                return;
-            }
+        System.out.print("Enter game name: ");
+        String gameName = scanner.nextLine().trim();
 
-            GameData selectedGame = games.get(gameNum - 1);
-            serverFacade.joinGame(selectedGame.gameID(), "OBSERVER");
+        // Find game by name
+        GameData selectedGame = null;
+        for (GameData game : games) {
+            if (game.gameName().equalsIgnoreCase(gameName)) {
+                selectedGame = game;
+                break;
+            }
+        }
+
+        if (selectedGame == null) {
+            System.out.println("✗ Game not found: " + gameName);
+            return;
+        }
+
+        try {
+            serverFacade.joinGame(selectedGame.gameID(), "");
             System.out.println("✓ Observing game!");
 
             GameData fullGame = serverFacade.getGame(selectedGame.gameID());
-            ChessboardUI.displayBoard(fullGame.game().getBoard(), true);
+            ChessboardUI.displayBoard(fullGame.game().getBoard(), true); // Default to white's perspective
 
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
         } catch (Exception e) {
             System.out.println("✗ Failed to observe game: " + e.getMessage());
         }
