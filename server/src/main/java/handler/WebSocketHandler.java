@@ -62,4 +62,41 @@ public class WebSocketHandler {
         System.err.println("WebSocket error: " + throwable.getMessage());
     }
 
+    private void handleConnect(Session session, UserGameCommand command) throws IOException {
+        try {
+            int gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+
+            // Get the game (validates auth and game exists)
+            GameData gameData = gameService.getGame(gameID, authToken);
+
+            // Determine username and color
+            String username = gameService.getUsernameFromToken(authToken);
+            sessionUserMap.put(session, username);
+
+            // Add session to game
+            gameSessions.computeIfAbsent(gameID, k -> ConcurrentHashMap.newKeySet()).add(session);
+            sessionGameMap.put(session, gameID);
+
+            // Send LOAD_GAME to connecting user
+            sendMessage(session, new ServerMessage(gameData));
+
+            // Determine player type
+            String playerType = "Observer";
+            if (username.equals(gameData.whiteUsername())) {
+                playerType = "WHITE";
+            } else if (username.equals(gameData.blackUsername())) {
+                playerType = "BLACK";
+            }
+
+            // Send NOTIFICATION to others
+            String notification = username + " joined as " + playerType;
+            broadcastToOthers(gameID, session, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, notification));
+
+        } catch (Exception e) {
+            sendErrorMessage(session, "Failed to connect to game: " + e.getMessage());
+        }
+    }
+
+
 }
