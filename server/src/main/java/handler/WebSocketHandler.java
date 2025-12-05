@@ -1,4 +1,4 @@
-package handler;
+package server.websocket;
 
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
@@ -12,7 +12,6 @@ import chess.ChessGame;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 @WebSocket
 public class WebSocketHandler {
@@ -158,9 +157,21 @@ public class WebSocketHandler {
         }
     }
 
+    private void handleResign(Session session, UserGameCommand command) throws IOException {
+        try {
+            int gameID = command.getGameID();
+            String authToken = command.getAuthToken();
 
+            gameService.resignGame(gameID, authToken);
 
+            String username = sessionUserMap.get(session);
+            String resignMsg = username + " resigned";
+            broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, resignMsg));
 
+        } catch (Exception e) {
+            sendErrorMessage(session, "Failed to resign");
+        }
+    }
 
     private void sendMessage(Session session, ServerMessage message) throws IOException {
         if (session.isOpen()) {
@@ -168,10 +179,21 @@ public class WebSocketHandler {
         }
     }
 
+    private void broadcastToGame(int gameID, ServerMessage message) throws IOException {
+        for (Session session : gameSessions.getOrDefault(gameID, new HashSet<>())) {
+            sendMessage(session, message);
+        }
+    }
 
+    private void broadcastToOthers(int gameID, Session excludeSession, ServerMessage message) throws IOException {
+        for (Session session : gameSessions.getOrDefault(gameID, new HashSet<>())) {
+            if (!session.equals(excludeSession)) {
+                sendMessage(session, message);
+            }
+        }
+    }
 
     private void sendErrorMessage(Session session, String error) throws IOException {
         sendMessage(session, new ServerMessage(ServerMessage.ServerMessageType.ERROR, error));
     }
-
 }
