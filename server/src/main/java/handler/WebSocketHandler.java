@@ -139,6 +139,39 @@ public class WebSocketHandler {
         }
     }
 
+    private void handleLeave(Session session, UserGameCommand command) throws IOException {
+        try {
+            int gameID = command.getGameID();
+            String authToken = command.getAuthToken();
 
+            gameService.leaveGame(gameID, authToken);
+
+            gameSessions.getOrDefault(gameID, new HashSet<>()).remove(session);
+            String username = sessionUserMap.remove(session);
+            sessionGameMap.remove(session);
+
+            String leaveMsg = username + " left the game";
+            broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, leaveMsg));
+
+        } catch (Exception e) {
+            sendErrorMessage(session, "Failed to leave game");
+        }
+    }
+
+
+
+
+
+    private void sendMessage(Session session, ServerMessage message) throws IOException {
+        if (session.isOpen()) {
+            session.getRemote().sendString(gson.toJson(message));
+        }
+    }
+
+
+
+    private void sendErrorMessage(Session session, String error) throws IOException {
+        sendMessage(session, new ServerMessage(ServerMessage.ServerMessageType.ERROR, error));
+    }
 
 }
