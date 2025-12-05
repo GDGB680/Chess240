@@ -12,11 +12,8 @@ import java.util.Objects;
 public class UserGameCommand {
 
     private final CommandType commandType;
-
     private final String authToken;
-
     private final Integer gameID;
-
     private final ChessMove move;
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID, ChessMove move) {
@@ -33,19 +30,10 @@ public class UserGameCommand {
         RESIGN
     }
 
-    public CommandType getCommandType() {
-        return commandType;
-    }
-
-    public String getAuthToken() {
-        return authToken;
-    }
-
-    public Integer getGameID() {
-        return gameID;
-    }
-
-    public ChessMove getMove() { return move; }
+    public CommandType getCommandType() { return commandType; }
+    public String getAuthToken() {return authToken;}
+    public Integer getGameID() {return gameID;}
+    public ChessMove getMove() {return move;}
 
     @Override
     public boolean equals(Object o) {
