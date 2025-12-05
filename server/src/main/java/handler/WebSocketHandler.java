@@ -98,5 +98,47 @@ public class WebSocketHandler {
         }
     }
 
+    private void handleMakeMove(Session session, UserGameCommand command) throws IOException {
+        try {
+            int gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+
+            if (command.getMove() == null) {
+                sendErrorMessage(session, "Move is required");
+                return;
+            }
+
+            // Make the move
+            gameService.makeMove(gameID, authToken, command.getMove());
+
+            // Get updated game
+            GameData gameData = gameService.getGame(gameID, authToken);
+
+            // Send LOAD_GAME to all
+            broadcastToGame(gameID, new ServerMessage(gameData));
+
+            // Send notification about move
+            String username = sessionUserMap.get(session);
+            String moveNotification = username + " made a move from " +
+                    command.getMove().getStartPosition() + " to " + command.getMove().getEndPosition();
+            broadcastToOthers(gameID, session, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, moveNotification));
+
+            // Check for checkmate/check/stalemate
+            ChessGame.TeamColor teamTurn = gameData.game().getTeamTurn();
+
+            if (gameData.game().isInCheckmate(teamTurn)) {
+                String checkmateMsg = teamTurn + " is in checkmate";
+                broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, checkmateMsg));
+            } else if (gameData.game().isInCheck(teamTurn)) {
+                String checkMsg = teamTurn + " is in check";
+                broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, checkMsg));
+            }
+
+        } catch (Exception e) {
+            sendErrorMessage(session, "Invalid move: " + e.getMessage());
+        }
+    }
+
+
 
 }
