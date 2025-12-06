@@ -164,6 +164,9 @@ public class Handler {
         }
     }
 
+    public GameService getGameService() {
+        return gameService;
+    }
 
     public void joinGame(Context ctx) {
         try {

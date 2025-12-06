@@ -69,6 +69,24 @@
             <artifactId>tyrus-standalone-client</artifactId>
             <version>2.1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>jetty-websocket-jetty-server</artifactId>
+            <version>12.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>jetty-websocket-jetty-client</artifactId>
+            <version>12.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>jetty-websocket-client</artifactId>
+            <version>11.0.0</version>
+        </dependency>
     </dependencies>
+
+
 
 </project>

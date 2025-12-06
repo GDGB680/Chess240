@@ -6,6 +6,9 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
@@ -17,6 +20,7 @@ public class WebSocketConnection {
     private final Gson gson = new Gson();
     private final WebSocketMessageListener listener;
     private final CountDownLatch connectLatch;
+    private final WebSocketClient client;
 
     public interface WebSocketMessageListener {
         void onServerMessage(ServerMessage message);
@@ -26,13 +30,14 @@ public class WebSocketConnection {
         this.listener = listener;
         this.connectLatch = new CountDownLatch(1);
 
-        WebSocketClient client = new WebSocketClient();
+        client = new WebSocketClient();
         client.start();
 
         URI uri = new URI(serverUrl.replace("http", "ws") + "/ws");
         client.connect(this, uri);
 
         if (!connectLatch.await(5, TimeUnit.SECONDS)) {
+            client.stop();
             throw new Exception("WebSocket connection timeout");
         }
     }
@@ -45,8 +50,12 @@ public class WebSocketConnection {
 
     @OnWebSocketMessage
     public void onMessage(String message) {
-        ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
-        listener.onServerMessage(serverMessage);
+        try {
+            ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
+            listener.onServerMessage(serverMessage);
+        } catch (Exception e) {
+            System.err.println("Error deserializing message: " + e.getMessage());
+        }
     }
 
     @OnWebSocketClose
@@ -54,15 +63,28 @@ public class WebSocketConnection {
         System.out.println("WebSocket closed: " + reason);
     }
 
+    @OnWebSocketError
+    public void onError(Session session, Throwable throwable) {
+        System.err.println("WebSocket error: " + throwable.getMessage());
+    }
+
     public void send(UserGameCommand command) throws Exception {
         if (session != null && session.isOpen()) {
             session.getRemote().sendString(gson.toJson(command));
+        } else {
+            throw new Exception("WebSocket session is not open");
         }
     }
 
     public void close() throws Exception {
-        if (session != null) {
-            session.close();
+        try {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        } finally {
+            if (client != null) {
+                client.stop();
+            }
         }
     }
 }

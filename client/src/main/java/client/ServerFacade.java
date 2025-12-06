@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.*;
 import model.*;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -90,4 +91,6 @@ public class ServerFacade {
 
     public String getAuthToken() {return authToken;}
     public String getUsername() {return currentUsername;}
+
+    public String getUrl() {return serverUrl;}
 }

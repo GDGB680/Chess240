@@ -20,4 +20,6 @@ public interface DataAccess {
     void deleteAuthToken(String authToken) throws DataAccessException;
 
     void clear() throws DataAccessException;
+
+    void updateGame(int gameID, GameData gameData) throws DataAccessException;
 }

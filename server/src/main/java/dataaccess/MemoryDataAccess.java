@@ -2,6 +2,9 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.*;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
@@ -72,5 +75,10 @@ public class MemoryDataAccess implements DataAccess {
             id = random.nextInt(10000); // Generate unique ID
         } while (games.containsKey(id)); // Check for collision
         return id;
+    }
+
+
+    @Override
+    public void updateGame(int gameID, GameData gameData) throws DataAccessException {
     }
 }

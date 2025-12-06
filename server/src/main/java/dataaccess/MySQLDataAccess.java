@@ -264,4 +264,30 @@ public class MySQLDataAccess implements DataAccess {
             throw new DataAccessException("Error clearing database: " + e.getMessage());
         }
     }
+
+    @Override
+    public void updateGame(int gameID, GameData gameData) throws DataAccessException {
+        // Update the game in database
+        String sql = "UPDATE games SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ? WHERE gameID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, gameData.whiteUsername());
+            stmt.setString(2, gameData.blackUsername());
+            stmt.setString(3, gameData.gameName());
+            stmt.setString(4, gson.toJson(gameData.game()));
+            stmt.setInt(5, gameID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Database error updating game");
+        }
+    }
+
+    private Connection connection;
+
+    public MySQLDataAccess(String dbUrl, String dbUser, String dbPassword) throws DataAccessException {
+        try {
+            this.connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to connect to database");
+        }
+    }
 }

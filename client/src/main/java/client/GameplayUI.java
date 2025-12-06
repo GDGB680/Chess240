@@ -33,7 +33,8 @@ public class GameplayUI implements WebSocketConnection.WebSocketMessageListener 
             UserGameCommand connectCmd = new UserGameCommand(
                     UserGameCommand.CommandType.CONNECT,
                     serverFacade.getAuthToken(),
-                    gameID
+                    gameID,
+                    null
             );
             wsConnection.send(connectCmd);
 
@@ -146,7 +147,8 @@ public class GameplayUI implements WebSocketConnection.WebSocketMessageListener 
             UserGameCommand leaveCmd = new UserGameCommand(
                     UserGameCommand.CommandType.LEAVE,
                     serverFacade.getAuthToken(),
-                    gameID
+                    gameID,
+                    null
             );
             wsConnection.send(leaveCmd);
             gameActive = false;
@@ -167,7 +169,8 @@ public class GameplayUI implements WebSocketConnection.WebSocketMessageListener 
                 UserGameCommand resignCmd = new UserGameCommand(
                         UserGameCommand.CommandType.RESIGN,
                         serverFacade.getAuthToken(),
-                        gameID
+                        gameID,
+                        null
                 );
                 wsConnection.send(resignCmd);
                 gameActive = false;

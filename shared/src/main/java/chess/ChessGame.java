@@ -155,6 +155,16 @@ public class ChessGame {
         } return false;
     }
 
+    private boolean gameOver = false;
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void gameOver() {
+        this.gameOver = true;
+    }
+
 
     @Override
     public boolean equals(Object o) {
