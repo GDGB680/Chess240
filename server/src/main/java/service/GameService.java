@@ -121,4 +121,77 @@ public class GameService {
             throw new DataAccessException("bad request");
         }
     }
+
+
+    public String getUsernameFromToken(String authToken) throws DataAccessException {
+        AuthData authData = dataAccess.getAuthToken(authToken);
+        if (authData == null) {
+            throw new DataAccessException("unauthorized");
+        }
+        return authData.username();
+    }
+
+    public void makeMove(int gameID, String authToken, ChessMove move) throws DataAccessException {
+        // Validate auth
+        AuthData authData = dataAccess.getAuthToken(authToken);
+        if (authData == null) {
+            throw new DataAccessException("unauthorized");
+        }
+
+        GameData gameData = dataAccess.getGame(gameID);
+        if (gameData == null) {
+            throw new DataAccessException("bad request");
+        }
+
+        // Check if game is over
+        if (gameData.game().isGameOver()) {
+            throw new DataAccessException("bad request");  // Can't move if game is over
+        }
+
+        // Make the move
+        gameData.game().makeMove(move);
+
+        // Update database
+        dataAccess.updateGame(gameID, gameData);
+    }
+
+    public void leaveGame(int gameID, String authToken) throws DataAccessException {
+        AuthData authData = dataAccess.getAuthToken(authToken);
+        if (authData == null) {
+            throw new DataAccessException("unauthorized");
+        }
+
+        GameData gameData = dataAccess.getGame(gameID);
+        if (gameData == null) {
+            throw new DataAccessException("bad request");
+        }
+
+        // Remove player from game
+        if (authData.username().equals(gameData.whiteUsername())) {
+            gameData = new GameData(gameData.gameID(), null, gameData.blackUsername(),
+                    gameData.gameName(), gameData.game());
+        } else if (authData.username().equals(gameData.blackUsername())) {
+            gameData = new GameData(gameData.gameID(), gameData.whiteUsername(), null,
+                    gameData.gameName(), gameData.game());
+        }
+
+        dataAccess.updateGame(gameID, gameData);
+    }
+
+    public void resignGame(int gameID, String authToken) throws DataAccessException {
+        AuthData authData = dataAccess.getAuthToken(authToken);
+        if (authData == null) {
+            throw new DataAccessException("unauthorized");
+        }
+
+        GameData gameData = dataAccess.getGame(gameID);
+        if (gameData == null) {
+            throw new DataAccessException("bad request");
+        }
+
+        // Mark game as over
+        gameData.game().gameOver();
+        dataAccess.updateGame(gameID, gameData);
+    }
+
 }

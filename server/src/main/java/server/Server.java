@@ -3,6 +3,8 @@ package server;
 import dataaccess.*;
 import handler.Handler;
 import io.javalin.Javalin;
+import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
+import server.websocket.WebSocketHandler;
 
 public class Server {
     private final Javalin javalin;
@@ -18,7 +20,14 @@ public class Server {
                     staticFileConfig.hostedPath = "/";
                     staticFileConfig.directory = "/web";
                 });
+
+                JettyWebSocketServletContainerInitializer.initialize(
+                        config.jetty.server,
+                        wsContainer -> wsContainer.addMapping("/ws",
+                                (req, resp) -> new WebSocketHandler(handler.getGameService()))
+                );
             });
+
             configureRoutes();
         } catch (DataAccessException e) {
             throw new RuntimeException("Failed to initialize database", e);
