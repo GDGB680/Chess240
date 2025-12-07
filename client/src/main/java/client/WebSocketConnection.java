@@ -6,13 +6,10 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
-
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 
 @WebSocket
 public class WebSocketConnection {
@@ -29,13 +26,10 @@ public class WebSocketConnection {
     public WebSocketConnection(String serverUrl, WebSocketMessageListener listener) throws Exception {
         this.listener = listener;
         this.connectLatch = new CountDownLatch(1);
-
         client = new WebSocketClient();
         client.start();
-
         URI uri = new URI(serverUrl.replace("http", "ws") + "/ws");
         client.connect(this, uri);
-
         if (!connectLatch.await(5, TimeUnit.SECONDS)) {
             client.stop();
             throw new Exception("WebSocket connection timeout");

@@ -9,7 +9,6 @@ import websocket.messages.ServerMessage;
 import model.GameData;
 import chess.ChessGame;
 import chess.ChessMove;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +34,6 @@ public class WebSocketHandler {
     public void onMessage(Session session, String message) throws IOException {
         try {
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
-
             switch (command.getCommandType()) {
                 case CONNECT -> handleConnect(session, command);
                 case MAKE_MOVE -> handleMakeMove(session, command);
@@ -66,33 +64,20 @@ public class WebSocketHandler {
         try {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
-
-            // Get the game (validates auth and game exists)
             GameData gameData = gameService.getGame(gameID, authToken);
-
-            // Determine username and color
             String username = gameService.getUsernameFromToken(authToken);
             sessionUserMap.put(session, username);
-
-            // Add session to game
             gameSessions.computeIfAbsent(gameID, k -> ConcurrentHashMap.newKeySet()).add(session);
             sessionGameMap.put(session, gameID);
-
-            // Send LOAD_GAME to connecting user
             sendMessage(session, new ServerMessage(gameData));
-
-            // Determine player type
             String playerType = "Observer";
             if (username.equals(gameData.whiteUsername())) {
                 playerType = "WHITE";
             } else if (username.equals(gameData.blackUsername())) {
                 playerType = "BLACK";
             }
-
-            // Send NOTIFICATION to others
             String notification = username + " joined as " + playerType;
             broadcastToOthers(gameID, session, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, notification));
-
         } catch (Exception e) {
             sendErrorMessage(session, "Failed to connect to game: " + e.getMessage());
         }
@@ -102,30 +87,18 @@ public class WebSocketHandler {
         try {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
-
             if (command.getMove() == null) {
                 sendErrorMessage(session, "Move is required");
                 return;
             }
-
-            // Make the move
             gameService.makeMove(gameID, authToken, command.getMove());
-
-            // Get updated game
             GameData gameData = gameService.getGame(gameID, authToken);
-
-            // Send LOAD_GAME to all
             broadcastToGame(gameID, new ServerMessage(gameData));
-
-            // Send notification about move
             String username = sessionUserMap.get(session);
             String moveNotification = username + " made a move from " +
                     command.getMove().getStartPosition() + " to " + command.getMove().getEndPosition();
             broadcastToOthers(gameID, session, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, moveNotification));
-
-            // Check for checkmate/check/stalemate
             ChessGame.TeamColor teamTurn = gameData.game().getTeamTurn();
-
             if (gameData.game().isInCheckmate(teamTurn)) {
                 String checkmateMsg = teamTurn + " is in checkmate";
                 broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, checkmateMsg));
@@ -133,7 +106,6 @@ public class WebSocketHandler {
                 String checkMsg = teamTurn + " is in check";
                 broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, checkMsg));
             }
-
         } catch (Exception e) {
             sendErrorMessage(session, "Invalid move: " + e.getMessage());
         }
@@ -143,16 +115,12 @@ public class WebSocketHandler {
         try {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
-
             gameService.leaveGame(gameID, authToken);
-
             gameSessions.getOrDefault(gameID, new HashSet<>()).remove(session);
             String username = sessionUserMap.remove(session);
             sessionGameMap.remove(session);
-
             String leaveMsg = username + " left the game";
             broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, leaveMsg));
-
         } catch (Exception e) {
             sendErrorMessage(session, "Failed to leave game");
         }
@@ -162,13 +130,10 @@ public class WebSocketHandler {
         try {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
-
             gameService.resignGame(gameID, authToken);
-
             String username = sessionUserMap.get(session);
             String resignMsg = username + " resigned";
             broadcastToGame(gameID, new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, resignMsg));
-
         } catch (Exception e) {
             sendErrorMessage(session, "Failed to resign");
         }
